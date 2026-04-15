@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: meu_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=usuario_admin
+      - POSTGRES_PASSWORD=Ludicaproject123
+      - POSTGRES_DB=Ludica_desenv
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql 
+      # Esta linha roda os scripts do banco de dados.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+    networks:
+      - rede-aplicacao
+
+volumes:
+  pgdata:
+
+networks:
+  rede-aplicacao:
+    driver: bridge

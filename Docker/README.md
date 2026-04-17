@@ -29,3 +29,23 @@ docker compose down -v && docker compose up -d
 Para confirmar se o banco de dados PostgreSQL está operante e se as tabelas foram criadas corretamente, execute o comando de inspeção via terminal:
 
 docker exec -it meu_postgres psql -U usuario_admin -d Ludica_desenv -c "\dt"
+
+## 4. Entrar no container do banco de dados
+
+`docker exec -it meu_postgres bash`
+
+## 5. Acessar o PostgreSQL 
+
+`psql -U usuario_admin -d Ludica_desenv`
+
+## 4. Exibir tabelas
+
+`\dt`
+
+# 5. Exibir colunas de uma tabela
+
+`\d <tabela>`
+
+ou
+
+`SELECT * FROM usuarios;`

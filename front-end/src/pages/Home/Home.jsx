@@ -8,7 +8,7 @@ export function Header({ activePage }) {
         <Link to="/home" className={`nav-item ${activePage === 'home' ? 'active' : ''}`}>HOME</Link>
         <Link to="/perfil" className={`nav-item ${activePage === 'perfil' ? 'active' : ''}`}>PERFIL</Link>
         <Link to="/amigos" className={`nav-item ${activePage === 'amigos' ? 'active' : ''}`}>AMIGOS</Link>
-        <Link to="/biblioteca" className={`nav-item ${activePage === 'biblioteca' ? 'active' : ''}`}>BIBLIOTECA</Link>
+        <Link to="/biblioteca" className={`nav-item ${activePage === 'games' ? 'active' : ''}`}>BIBLIOTECA</Link>
       </nav>
       
       <div className="search-container">

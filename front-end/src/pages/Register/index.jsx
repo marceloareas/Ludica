@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import './styles.css'
+import './register.module.css'
 
 function Input() {
   const [isLogin, setIsLogin] = useState(false)

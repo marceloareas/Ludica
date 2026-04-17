@@ -1,5 +1,5 @@
 import { Header, Footer } from '../Home/Home'
-import './games.css'
+import './Games.css'
 
 // Dados fictícios por enquanto
 const bibliotecaDeJogos = [

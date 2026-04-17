@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import './styles.css'
+import './Login.css'
 
 function Input() {
-  const [isLogin, setIsLogin] = useState(false)
+  const [goToRegister, setGoToRegister] = useState(false);
+  const [goToHome, setGoToHome] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLogin) {
+    if (goToRegister) {
       navigate("/register");
     }
-  }, [isLogin, navigate]);
+    if (goToHome) {
+      navigate("/home");
+    }
+  }, [goToRegister, goToHome, navigate]);
 
   function handleSubmit(e) {
-    e.preventDefault(); 
-    setIsLogin(true);
+    e.preventDefault();
+    setGoToHome(true);
+  }
+  function handleGoRegister() {
+    setGoToRegister(true);
   }
 
   return (
@@ -35,7 +42,7 @@ function Input() {
         <button className="enter-login">Entrar</button>
       </form>
 
-      <p onClick={() => setIsLogin(!isLogin)} style={{ cursor: 'pointer' }}>
+      <p onClick={handleGoRegister} style={{ cursor: 'pointer' }}>
         Não tem conta? <span className="other-way-enter">Criar uma</span>
       </p>
 

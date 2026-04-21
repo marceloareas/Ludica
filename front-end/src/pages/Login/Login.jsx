@@ -1,20 +1,44 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import styles from './login.module.css'
 
 function Input() {
-  const [goToRegister, setGoToRegister] = useState(false)
-  const [goToHome, setGoToHome] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (goToRegister) navigate("/register")
-    if (goToHome) navigate("/home")
-  }, [goToRegister, goToHome, navigate])
+  const [nomeUsuario, setNomeUsuario] = useState('')
+  const [senha, setSenha] = useState('')
 
-  function handleSubmit(e) {
+  async function handleLogin(e) {
     e.preventDefault()
-    setGoToHome(true)
+
+    try {
+      const response = await fetch('http://localhost:3000/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName: nomeUsuario,
+          password: senha
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao fazer login')
+      }
+
+      const data = await response.json()
+
+      localStorage.setItem('token', data.token)
+
+      console.log('Logado:', data)
+
+      navigate("/home")
+
+    } catch (err) {
+      console.error(err)
+      alert('Erro no login')
+    }
   }
 
   return (
@@ -24,16 +48,31 @@ function Input() {
         <h1>Entrar</h1>
       </div>
 
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <input className={styles.input} type="text" placeholder="Nome de usuário" />
-        <input className={styles.input} type="password" placeholder="Senha" />
+      <form className={styles.form} onSubmit={handleLogin}>
 
-        <button className={styles.enterLogin}>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="Nome de usuário"
+          value={nomeUsuario}
+          onChange={(e) => setNomeUsuario(e.target.value)}
+        />
+
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+
+        <button type="submit" className={styles.enterLogin}>
           Entrar
         </button>
+
       </form>
 
-      <p onClick={() => setGoToRegister(true)}>
+      <p onClick={() => navigate("/register")}>
         Não tem conta?{" "}
         <span className={styles.otherWayEnter}>
           Criar uma

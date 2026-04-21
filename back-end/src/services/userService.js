@@ -1,89 +1,107 @@
+const db = require('../db/db.js');
 const bcrypt = require('bcrypt');
 
-let users = [];
-let idCounter = 1;
+const jwt = require('jsonwebtoken');
+const SECRET = 'segredo_super_secreto';
 
-function validateUser(data) {
-    if (!data.name || typeof data.name !== 'string') {
-        throw new Error('Name is required and must be a string');
+
+exports.getAll = async () => {
+    const result = await db.query('SELECT * FROM usuarios');
+    return result.rows;
+};
+
+exports.register = async (data) => {
+    const {
+        email,
+        name,
+        userName,
+        password,
+        birthDate
+    } = data;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const result = await db.query(
+        `INSERT INTO usuarios 
+        (email, nome_completo, nome_usuario, senha, data_nascimento, tipo_usuario, flag_usuario)
+        VALUES ($1,$2,$3,$4,$5,'Jogador','A')
+        RETURNING *`,
+        [email, name, userName, hashedPassword, birthDate]
+    );
+
+    return result.rows[0];
+};
+
+exports.login = async (userName, password) => {
+    const result = await db.query(
+        `SELECT * FROM usuarios WHERE nome_usuario = $1`,
+        [userName]
+    );
+
+    const user = result.rows[0];
+
+    if (!user) {
+        throw new Error('Usuário não encontrado');
     }
 
-    if (!data.email || typeof data.email !== 'string') {
-        throw new Error('Email is required and must be a string');
-    }
-}
+    const validPassword = await bcrypt.compare(password, user.senha);
 
-exports.getAll = () => users;
-
-exports.create = (data) => {
-    validateUser(data);
-
-    if (!data.password) {
-        throw new Error('Password is required');
+    if (!validPassword) {
+        throw new Error('Senha inválida');
     }
 
-    const hashedPassword = bcrypt.hashSync(data.password, 10);
-
-    const newUser = {
-        id: idCounter++,
-        name: data.name,
-        userName: data.userName,
-        email: data.email,
-        password: hashedPassword,
-        birthDate: data.birthDate,
-        createAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
+    const token = jwt.sign(
+        { id: user.id_usuario, userName: user.nome_usuario },
+        SECRET,
+        { expiresIn: '1h' }
+    );
 
     return {
-        id: newUser.id,
-        name: newUser.name,
-        userName: newUser.userName,
-        email: newUser.email,
-        birthDate: newUser.birthDate,
+        token,
+        user: {
+            id: user.id_usuario,
+            userName: user.nome_usuario,
+            email: user.email
+        }
     };
 };
 
-exports.update = (id, data) => {
-    const index = users.findIndex(u => u.id == id);
+exports.update = async (id, data) => {
+    const result = await db.query(
+        `UPDATE usuarios 
+         SET userName=$1, email=$2, nome_completo=$3
+         WHERE id_usuario=$4
+         RETURNING *`,
+        [data.userName, data.email, data.nome_completo, id]
+    );
 
-    if (index === -1) {
-        throw new Error('User not found');
+    if (result.rows.length === 0) {
+        throw new Error('Usuário não encontrado');
     }
 
-    validateUser(data);
-
-    let updatedPassword = users[index].password;
-
-    if (data.password) {
-        updatedPassword = bcrypt.hashSync(data.password, 10);
-    }
-
-    users[index] = {
-        id: users[index].id,
-        name: data.name,
-        userName: data.userName,
-        email: data.email,
-        password: updatedPassword,
-        birthDate: data.birthDate,
-    };
-
-    return {
-        id: users[index].id,
-        name: users[index].name,
-        userName: users[index].userName,
-        email: users[index].email,
-        birthDate: users[index].birthDate
-    };
+    return result.rows[0];
 };
 
-exports.remove = (id) => {
-    const index = users.findIndex(u => u.id == id);
+exports.remove = async (id) => {
+    const result = await db.query(
+        `DELETE FROM usuarios WHERE id_usuario=$1 RETURNING *`,
+        [id]
+    );
 
-    if (index === -1) {
-        throw new Error('User not found');
+    if (result.rows.length === 0) {
+        throw new Error('Usuário não encontrado');
     }
+};
 
-    users.splice(index, 1);
+exports.getUserWithAvatar = async (id) => {
+    const result = await db.query(
+        `SELECT u.*, a.aparencia_json
+         FROM usuarios u
+         LEFT JOIN avatares a 
+         ON u.id_usuario = a.id_usuario
+         WHERE u.id_usuario = $1`,
+        [id]
+    );
+
+    return result.rows[0];
 };

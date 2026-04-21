@@ -8,9 +8,9 @@ services:
       - POSTGRES_PASSWORD=Ludicaproject123
       - POSTGRES_DB=Ludica_desenv
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql 
+      - pgdata:/var/lib/postgresql
       # Esta linha roda os scripts do banco de dados.
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:

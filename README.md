@@ -37,18 +37,20 @@ Instalação: [Docker Official Website](https://docs.docker.com/engine/install/)
 Instalação e Execução
 Clone o repositório para a máquina local.
 
-No terminal, suba os containers utilizando:
+## Rodando o Docker
+
+- Vá até a pasta `docker` através do terminal e rode:
 
 ```docker compose up```
 
-Caso seja a primeira execução ou tenha feito alterações no código, utilize:
+## Rodando o Front-End
 
-```docker compose up --build```
+- Vá até a pasta `front-end` através do terminal e rode:
 
-Para parar os serviços e remover os containers:
+```npm run dev```
 
-```docker compose down```
+## Rodando o Back-End
 
-Para remover também os volumes (limpar o banco de dados):
+- Vá até a pasta `back-end` através do terminal e rode:
 
-```docker compose down -v```
+```npm run dev```

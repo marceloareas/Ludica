@@ -1,0 +1,22 @@
+:root {
+  --white: #ffffff;
+
+  --bg: linear-gradient(
+    185deg,
+    #2c2f38 10%,
+    #2f374f 30%,
+    #2b3156 100%
+  );
+
+  --accent-orange: #e17e0e;
+  --accent-orange-hover: #c9700b;
+  --yellow-light: #f6dbbb;
+}
+
+.mainLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--white);
+}

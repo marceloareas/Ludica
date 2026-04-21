@@ -1,7 +1,11 @@
 :root {
+  --text: #9ca3af;
+  --text-h: #f3f4f6;
+  --bg: linear-gradient(185deg,#2c2f38 10%,#2f374f 30%,#2b3156 100%);
   --accent: #c084fc;
   --accent-bg: rgba(192, 132, 252, 0.15);
   --accent-border: rgba(192, 132, 252, 0.5);
+  --white: #ffffff;
 }
 
 .center {
@@ -13,9 +17,6 @@
   min-height: 100vh;
 }
 
-.h1TextMain {
-  margin-top: 20px;
-}
 
 .form {
   display: flex;
@@ -38,8 +39,11 @@
   color: var(--accent);
   background: var(--accent-bg);
   border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
   margin-top: 20px;
-  transition: 0.3s;
 }
 
 .enterLogin:hover {

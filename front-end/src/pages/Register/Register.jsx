@@ -1,42 +1,45 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
-import styles from './login.module.css'
+import styles from './register.module.css'
 
 function Input() {
-  const [goToRegister, setGoToRegister] = useState(false)
-  const [goToHome, setGoToHome] = useState(false)
+  const [goToLogin, setGoToLogin] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (goToRegister) navigate("/register")
-    if (goToHome) navigate("/home")
-  }, [goToRegister, goToHome, navigate])
+    if (goToLogin) {
+      navigate("/")
+    }
+  }, [goToLogin, navigate])
 
   function handleSubmit(e) {
     e.preventDefault()
-    setGoToHome(true)
+    setGoToLogin(true)
   }
 
   return (
     <section className={styles.center}>
       
       <div className={styles.h1TextMain}>
-        <h1>Entrar</h1>
+        <h1>Criar uma conta</h1>
       </div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
+        <input className={styles.input} type="email" placeholder="E-mail" />
+        <input className={styles.input} type="text" placeholder="Nome completo" />
         <input className={styles.input} type="text" placeholder="Nome de usuário" />
         <input className={styles.input} type="password" placeholder="Senha" />
+        <input className={styles.input} type="date" />
 
         <button className={styles.enterLogin}>
-          Entrar
+          Criar conta
         </button>
       </form>
 
-      <p onClick={() => setGoToRegister(true)}>
-        Não tem conta?{" "}
+      <p onClick={() => setGoToLogin(true)}>
+        Já tem uma conta?{" "}
         <span className={styles.otherWayEnter}>
-          Criar uma
+          Entrar
         </span>
       </p>
 

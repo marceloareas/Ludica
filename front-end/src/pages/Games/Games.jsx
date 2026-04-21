@@ -1,7 +1,6 @@
-import { Header, Footer } from '../Home/Home'
-import './Games.css'
+import Layout from '../../components/Layout/Layout'
+import styles from './games.module.css'
 
-// Dados fictícios por enquanto
 const bibliotecaDeJogos = [
   { id: 1, title: 'Cruzadinha Geométrica', score: '120', lastAccess: 'há 2 horas' },
   { id: 2, title: 'Maratona SBCB', score: 'X', lastAccess: null },
@@ -11,49 +10,39 @@ const bibliotecaDeJogos = [
   { id: 6, title: 'Caça-Palavras', score: '190', lastAccess: 'há 1 hora' },
 ]
 
-// Componente para um cartão de jogo 
 function GameCard({ game }) {
   return (
-    <div className="game-card">
-      {/* Tag de último acesso (se existir) */}
+    <div className={styles.gameCard}>
       {game.lastAccess && (
-        <div className="last-access-tag">
+        <div className={styles.lastAccessTag}>
           Último acesso: {game.lastAccess}
         </div>
       )}
-      
-      {/* Área branca para a imagem/thumbnail do jogo */}
-      <div className="game-thumbnail">
-        {/* Futuramente: <img src={game.imageUrl} alt={game.title} /> */}
-      </div>
-      
-      {/* Footer do cartão com pontuação e botão */}
-      <div className="game-card-footer">
-        <span className="game-score">Pontuação: {game.score}</span>
-        <button className="play-button">Jogar</button>
+
+      <div className={styles.gameThumbnail}></div>
+
+      <div className={styles.gameCardFooter}>
+        <span className={styles.gameScore}>
+          Pontuação: {game.score}
+        </span>
+        <button className={styles.playButton}>
+          Jogar
+        </button>
       </div>
     </div>
   )
 }
 
-export function Games() {
+export default function Games() {
   return (
-    <div className="main-layout">
-      <Header activePage="biblioteca" />
-
-      <main className="library-section">
-
-        {/* Grade de Jogos */}
-        <div className="game-grid-container">
+    <Layout activePage="games">
+      <main className={styles.librarySection}>
+        <div className={styles.gameGridContainer}>
           {bibliotecaDeJogos.map(game => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
       </main>
-
-      <Footer />
-    </div>
+    </Layout>
   )
 }
-
-export default Games

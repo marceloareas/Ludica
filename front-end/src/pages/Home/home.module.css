@@ -1,0 +1,26 @@
+:root {
+  --white: #ffffff;
+  --bg: linear-gradient(185deg,#2c2f38 10%,#2f374f 30%,#2b3156 100%);
+  --accent-orange: #e17e0e;
+  --accent-orange-hover: #c9700b;
+  --yellow-light: #f6dbbb;
+  --black-footer: #0f0f0f;
+}
+
+.avatarSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatarPlaceholder {
+  text-align: center;
+}
+
+.avatarPlaceholder h1 {
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 10px;
+  color: white;
+}

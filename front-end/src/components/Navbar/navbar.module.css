@@ -1,0 +1,48 @@
+.homeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 5%;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.headerNav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navItem {
+  color: white;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: 0.3s;
+}
+
+.navItem:hover {
+  opacity: 1;
+}
+
+.active {
+  opacity: 1;
+  color: var(--accent-orange);
+}
+
+.searchContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.searchInput {
+  background: var(--yellow-light);
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.searchButton {
+  background: var(--accent-orange);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+}

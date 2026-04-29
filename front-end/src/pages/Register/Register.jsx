@@ -98,7 +98,11 @@ function Input() {
 
       <p>
         Já tem uma conta?{" "}
-        <span className={styles.otherWayEnter}>
+        <span
+          className={styles.otherWayEnter}
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
           Entrar
         </span>
       </p>

@@ -12,12 +12,12 @@ export default function Navbar({ activePage }) {
           HOME
         </Link>
 
-        <Link
+        {/* <Link
           to="/perfil"
           className={`${styles.navItem} ${activePage === 'perfil' ? styles.active : ''}`}
         >
           PERFIL
-        </Link>
+        </Link> */}
 
         <Link
           to="/amigos"

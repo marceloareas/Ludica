@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 5%;
+  padding: 2rem 2%;
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -29,12 +29,14 @@
 
 .searchContainer {
   display: flex;
+  margin-inline: 30px;
   gap: 8px;
 }
 
 .searchInput {
   background: var(--yellow-light);
   padding: 10px;
+  padding-inline: 60px;
   border-radius: 10px;
   border: none;
 }
@@ -45,4 +47,16 @@
   border-radius: 10px;
   padding: 10px;
   cursor: pointer;
+}
+
+.buttonLogout {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.imageLogout {
+  width: 35px;
+  margin-left: 0px;
+  padding-top: 5px;
 }

@@ -42,6 +42,17 @@ export default function Navbar({ activePage }) {
         />
         <button className={styles.searchButton}>🔍</button>
       </div>
+
+      <div>
+        <Link to="/">
+        <button className={styles.buttonLogout}>
+          <img
+            src={`/images/logout.png`}
+            className={styles.imageLogout}
+          />
+        </button>
+        </Link>
+      </div>
     </header>
   )
 }

@@ -1,7 +1,19 @@
-import { Link } from 'react-router-dom'
-import styles from './navbar.module.css'
+import { Link, useNavigate } from 'react-router-dom'; // Importe tudo do mesmo pacote
+import styles from './navbar.module.css';
 
 export default function Navbar({ activePage }) {
+  // O hook DEVE ser chamado aqui dentro
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // É importante limpar o localStorage para o usuário realmente deslogar
+    localStorage.removeItem('id_user');
+    localStorage.removeItem('avatar');
+    
+    // Agora redireciona para a tela de Login ou Home
+    navigate('/'); 
+  };
+
   return (
     <header className={styles.homeHeader}>
       <nav className={styles.headerNav}>
@@ -11,13 +23,6 @@ export default function Navbar({ activePage }) {
         >
           HOME
         </Link>
-
-        {/* <Link
-          to="/perfil"
-          className={`${styles.navItem} ${activePage === 'perfil' ? styles.active : ''}`}
-        >
-          PERFIL
-        </Link> */}
 
         <Link
           to="/amigos"
@@ -31,6 +36,13 @@ export default function Navbar({ activePage }) {
           className={`${styles.navItem} ${activePage === 'games' ? styles.active : ''}`}
         >
           BIBLIOTECA
+        </Link>
+
+        <Link
+          to="/Avatar"
+          className={`${styles.navItem} ${activePage === 'Avatar' ? styles.active : ''}`}
+        >
+          AVATAR
         </Link>
       </nav>
 
@@ -54,5 +66,5 @@ export default function Navbar({ activePage }) {
         </Link>
       </div>
     </header>
-  )
+  );
 }

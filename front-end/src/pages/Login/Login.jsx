@@ -29,9 +29,12 @@ function Input() {
 
       const data = await response.json()
 
-      localStorage.setItem('token', data.token)
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('id_user', data.user.id);
+
 
       console.log('Logado:', data)
+      console.log('id_user:', data.user.id)
 
       navigate("/home")
 
@@ -39,6 +42,8 @@ function Input() {
       console.error(err)
       alert('Erro no login')
     }
+
+
   }
 
   return (

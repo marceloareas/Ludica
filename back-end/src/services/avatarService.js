@@ -19,16 +19,19 @@ exports.createOrUpdateAvatar = async (userId, aparenciaJson) => {
 
         return result.rows[0];
     }
+    else {
+        
+        const result = await db.query(
+            `INSERT INTO avatares
+            (id_usuario, aparencia_json)
+            VALUES ($1, $2)
+            RETURNING *`,
+            [userId, aparenciaJson]
+        );
+        
+        return result.rows[0];
+    }
 
-    const result = await db.query(
-        `INSERT INTO avatares
-        (id_usuario, aparencia_json)
-        VALUES ($1, $2)
-        RETURNING *`,
-        [userId, aparenciaJson]
-    );
-
-    return result.rows[0];
 };
 
 exports.getAvatar = async (userId) => {

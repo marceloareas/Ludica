@@ -4,10 +4,13 @@ exports.saveAvatar = async (req, res) => {
 
     try {
 
+        const userId = req.params.id;
+        const aparencia = req.body.config;
+
         const avatar = await avatarService
             .createOrUpdateAvatar(
-                req.params.id,
-                req.body.aparencia_json
+                userId,
+                aparencia
             );
 
         res.json(avatar);

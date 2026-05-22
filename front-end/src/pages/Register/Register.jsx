@@ -73,10 +73,11 @@ function Input() {
           onChange={(e) => setNomeCompleto(e.target.value)}
         />
 
+        <p className={styles.gametarg}>Nome que será exibido para os outros usuários</p>
         <input
-          className={styles.input}
+          className={styles.inputGametarg}
           type="text"
-          placeholder="Nome de usuário"
+          placeholder="Gametarg"
           value={nomeUsuario}
           onChange={(e) => setNomeUsuario(e.target.value)}
         />

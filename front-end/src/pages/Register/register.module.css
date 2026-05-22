@@ -51,3 +51,15 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.inputGametarg {
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  margin-top: -10px;
+}
+
+.gametarg {
+  font-size: 10px;
+  margin-right: 60px;
+}

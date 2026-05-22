@@ -10,9 +10,15 @@ function Input() {
   const [nomeUsuario, setNomeUsuario] = useState('')
   const [senha, setSenha] = useState('')
   const [dataNascimento, setDataNascimento] = useState('')
+  const [confirmarSenha, setConfirmarSenha] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
+
+    if (senha !== confirmarSenha) {
+      alert('As senhas precisam ser iguais')
+      return
+    }
 
     try {
       const response = await fetch('http://localhost:3000/users/register', {
@@ -81,6 +87,14 @@ function Input() {
           placeholder="Senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
+        />
+
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Confirme sua senha"
+          value={confirmarSenha}
+          onChange={(e) => setConfirmarSenha(e.target.value)}
         />
 
         <input

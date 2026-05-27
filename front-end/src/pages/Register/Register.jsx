@@ -40,7 +40,7 @@ function Input() {
       }
 
       alert('Conta criada!')
-      navigate("/home")
+      navigate("/")
     
     } catch (err) {
       console.error(err)

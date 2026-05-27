@@ -1,26 +1,120 @@
-:root {
-  --white: #ffffff;
-  --bg: linear-gradient(185deg,#2c2f38 10%,#2f374f 30%,#2b3156 100%);
-  --accent-orange: #e17e0e;
-  --accent-orange-hover: #c9700b;
-  --yellow-light: #f6dbbb;
-  --black-footer: #0f0f0f;
-}
-
-.avatarSection {
-  flex: 1;
+/* home.module.css */
+.container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding: 50px;
+  gap: 40px;
+  background-color: #1a2238;
+  /* Não defina height nem flex aqui, deixe o Layout cuidar do espaço */
+  flex-grow: 1; 
+  width: 100%;
 }
 
-.avatarPlaceholder {
-  text-align: center;
+.welcomeCard {
+  background-color: #fff3dd;
+  border-radius: 40px;
+  padding: 40px 60px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
 }
 
-.avatarPlaceholder h1 {
-  font-size: clamp(2rem, 8vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: 10px;
+.avatarWrapper {
+  background: white;
+  padding: 15px;
+  border-radius: 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.welcomeContent {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0; /* Essencial para o overflow de texto funcionar */
+}
+.welcomeContent h1 {
+  color: #2d3748;
+  font-size: 2.2rem; /* Reduzi um pouco o tamanho para nomes longos */
+  margin: 0;
+  word-wrap: break-word; /* Quebra nomes muito longos */
+  line-height: 1.2;
+}
+
+.welcomeContent p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.personalizeBtn {
+  align-self: flex-start; /* Posiciona o botão à esquerda sob o texto */
+  background-color: #805ad5;
   color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
+
+.personalizeBtn:hover {
+  background-color: #6b46c1;
+  transform: translateY(-2px);
+}
+
+.recommendedSection {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 30px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.sectionHeader h3 { color: white; font-size: 1.4rem; margin: 0; }
+
+.badge {
+  background: #4299e1;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.gameGrid { display: flex; gap: 20px; }
+
+.gameCard {
+  background: #fff;
+  padding: 15px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  transition: transform 0.2s;
+}
+
+.gameCard:hover { transform: scale(1.03); }
+
+.gameIcon { width: 50px; height: 50px; background-color: #fbd38d; border-radius: 12px; }
+.gameText h4 { margin: 0; font-size: 0.95rem; color: #2d3748; }
+.gameText p { margin: 0; font-size: 0.75rem; color: #718096; }

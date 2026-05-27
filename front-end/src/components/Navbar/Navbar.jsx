@@ -45,16 +45,7 @@ export default function Navbar({ activePage }) {
           AVATAR
         </Link>
       </nav>
-
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          placeholder="Buscar jogos"
-          className={styles.searchInput}
-        />
-        <button className={styles.searchButton}>🔍</button>
-      </div>
-
+      
       <div>
         <Link to="/">
         <button className={styles.buttonLogout}>

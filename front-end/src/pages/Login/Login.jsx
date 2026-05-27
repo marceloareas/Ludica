@@ -31,10 +31,12 @@ function Input() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('id_user', data.user.id);
+      localStorage.setItem('userName', data.user.userName);
 
 
       console.log('Logado:', data)
       console.log('id_user:', data.user.id)
+      console.log('userName:', data.user.userName)
 
       navigate("/home")
 

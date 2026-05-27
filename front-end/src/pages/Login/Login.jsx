@@ -28,15 +28,14 @@ function Input() {
       }
 
       const data = await response.json()
+      console.log('Login bem-sucedido:', data)
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('id_user', data.user.id);
       localStorage.setItem('userName', data.user.userName);
-
-
-      console.log('Logado:', data)
-      console.log('id_user:', data.user.id)
-      console.log('userName:', data.user.userName)
+      localStorage.setItem('email', data.user.email);
+      localStorage.setItem('nome_completo', data.user.nome_completo);
+      localStorage.setItem('data_nascimento', data.user.data_nascimento);
 
       navigate("/home")
 

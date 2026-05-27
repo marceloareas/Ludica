@@ -1,0 +1,20 @@
+.profileContainer {
+  padding-bottom: 50px;
+}
+
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 15px 0 5px 0;
+  text-align: left;
+  width: 100%;
+}

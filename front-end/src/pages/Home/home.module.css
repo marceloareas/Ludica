@@ -113,6 +113,12 @@
   transition: transform 0.2s;
 }
 
+.buttonGroup {
+  display: flex; /* Coloca os botões lado a lado */
+  gap: 10px; /* Espaço horizontal entre os botões */
+  margin-top: 10px;
+}
+
 .gameCard:hover { transform: scale(1.03); }
 
 .gameIcon { width: 50px; height: 50px; background-color: #fbd38d; border-radius: 12px; }

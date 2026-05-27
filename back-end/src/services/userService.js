@@ -61,7 +61,9 @@ exports.login = async (userName, password) => {
         user: {
             id: user.id_usuario,
             userName: user.nome_usuario,
-            email: user.email
+            email: user.email,
+            nome_completo: user.nome_completo,
+            data_nascimento: user.data_nascimento,
         }
     };
 };

@@ -1,9 +1,7 @@
-// seed.js
-
 const db = require('./src/db/db');
+const bcrypt = require('bcrypt');
 
 async function seed() {
-
     try {
 
         console.log('🌱 Iniciando seed...');
@@ -20,6 +18,10 @@ async function seed() {
 
         console.log('🧹 Banco limpo');
 
+        const senhaTeste = await bcrypt.hash('senha123', 10);
+        const senhaAdmin = await bcrypt.hash('admin123', 10);
+        const senhaPlayer = await bcrypt.hash('player123', 10);
+
         const usuarios = await db.query(`
             INSERT INTO usuarios (
                 nome_usuario,
@@ -35,7 +37,7 @@ async function seed() {
                 'teste',
                 'teste@email.com',
                 '2000-01-01',
-                'senha123',
+                $1,
                 'Teste User',
                 'Jogador',
                 'A'
@@ -44,7 +46,7 @@ async function seed() {
                 'admin01',
                 'admin@email.com',
                 '1995-05-10',
-                'admin123',
+                $2,
                 'Administrador Master',
                 'Administrador',
                 'A'
@@ -53,20 +55,23 @@ async function seed() {
                 'player01',
                 'player@email.com',
                 '2003-08-15',
-                'player123',
+                $3,
                 'Jogador Teste',
                 'Jogador',
                 'A'
             )
             RETURNING *;
-        `);
+        `, [
+            senhaTeste,
+            senhaAdmin,
+            senhaPlayer
+        ]);
 
         console.log('✅ Usuários inseridos');
 
         const user1 = usuarios.rows[0];
         const user2 = usuarios.rows[1];
         const user3 = usuarios.rows[2];
-
 
         await db.query(`
             INSERT INTO avatares (
@@ -158,7 +163,8 @@ async function seed() {
 
         console.log('✅ Pontuações inseridas');
 
-       await db.query(`
+        // HISTÓRICO
+        await db.query(`
             INSERT INTO historico_partidas (
                 id_usuario,
                 id_jogo,
@@ -189,6 +195,7 @@ async function seed() {
 
         console.log('✅ Histórico inserido');
 
+        // AMIZADES
         await db.query(`
             INSERT INTO amizade (
                 id_usuario_1,

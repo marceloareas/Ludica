@@ -6,9 +6,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   color: white;
-  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.profileHeader h2 {
+  margin-top: 20px;
 }
 
 .sectionTitle {

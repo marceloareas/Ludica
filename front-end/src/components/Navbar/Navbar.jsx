@@ -39,10 +39,10 @@ export default function Navbar({ activePage }) {
         </Link>
 
         <Link
-          to="/Avatar"
-          className={`${styles.navItem} ${activePage === 'Avatar' ? styles.active : ''}`}
+          to="/perfil"
+          className={`${styles.navItem} ${activePage === 'perfil' ? styles.active : ''}`}
         >
-          AVATAR
+          PERFIL
         </Link>
       </nav>
       

@@ -3,8 +3,11 @@ import { AvatarDisplay } from '../../components/Avatar/AvatarDisplay';
 import Layout from '../../components/Layout/Layout';
 import styles from './perfil.module.css'; // Estilos específicos para organização
 import registerStyles from '../Register/register.module.css'; // Estilos dos inputs/botão
+import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nomeCompleto: localStorage.getItem('nome_completo') || '',
     email: localStorage.getItem('email') || '',
@@ -24,6 +27,13 @@ export default function Perfil() {
         <div className={styles.profileHeader}>
           <AvatarDisplay config={avatarConfig} size={120} />
           <h2>{formData.namertag}</h2>
+
+          <button
+            className={registerStyles.enterLogin}
+            onClick={() => navigate("/avatar")}
+          >
+            Editar Avatar
+          </button>
         </div>
 
         <form className={registerStyles.form}>

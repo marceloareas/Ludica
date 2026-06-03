@@ -39,21 +39,6 @@ export default function Home() {
           <div className={styles.welcomeContent}>
             <h1>Bem-vindo ao Lúdica, {userName}!</h1>
             <p>Sua jornada de aprendizado começa aqui.</p>
-            <div className={styles.buttonGroup}>
-              <button 
-                className={styles.personalizeBtn}
-                onClick={() => navigate('/Avatar')}
-              >
-                <i className="fa-solid fa-pen-to-square"></i> Personalizar Avatar
-              </button>
-              
-              <button 
-                className={styles.personalizeBtn}
-                onClick={() => navigate('/Perfil')}
-              >
-                <i className="fa-solid fa-user"></i> Visualizar Perfil
-              </button>
-            </div>
           </div>
         </section>
 

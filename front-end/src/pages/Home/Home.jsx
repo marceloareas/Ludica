@@ -30,7 +30,6 @@ export default function Home() {
     <Layout activePage="home">
       <main className={styles.container}>
         
-        {/* CARD PRINCIPAL: AVATAR À ESQUERDA + TEXTO À DIREITA */}
         <section className={styles.welcomeCard}>
           <div className={styles.avatarWrapper}>
             {avatarConfig && <AvatarDisplay config={avatarConfig} size={160} />}
@@ -42,7 +41,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEÇÃO DE JOGOS RECOMENDADOS (AGORA COM MAIS ESPAÇO) */}
         <section className={styles.recommendedSection}>
           <div className={styles.sectionHeader}>
              <h3>Continue Jogando</h3>

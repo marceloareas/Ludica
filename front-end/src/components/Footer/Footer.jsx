@@ -4,7 +4,6 @@ export default function Footer() {
   return (
     <footer className={styles.homeFooter}>
       <div className={styles.footerLeft}>
-        <span className={styles.footerLogo}>LOGO</span>
         <span className={styles.footerDescription}>
           Plataforma Lúdica de Jogos para Estudos
         </span>

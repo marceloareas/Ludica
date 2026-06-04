@@ -18,12 +18,6 @@
   align-items: center;
 }
 
-.footerLogo {
-  font-weight: 800;
-  font-size: 1.2rem;
-  color: var(--white);
-}
-
 .footerDescription {
   font-size: 0.85rem;
   color: rgba(255,255,255,0.6);

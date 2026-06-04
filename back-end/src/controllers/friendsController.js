@@ -1,7 +1,6 @@
 const friendService = require('../services/friendsService');
 
 exports.enviar = async (req, res) => {
-    console.log(req)
     try {
         const friend = await friendService.enviarSolicitacao(
             req.body.id_usuario_1,

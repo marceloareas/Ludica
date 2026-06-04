@@ -15,7 +15,6 @@ export default function GameDetails() {
   useEffect(() => {
 
     async function loadGame() {
-
       try {
 
         setLoading(true);

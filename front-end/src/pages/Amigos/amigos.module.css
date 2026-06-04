@@ -1,10 +1,8 @@
-/* Amigos.css */
 .container {
   min-height: 100vh;
-  width: 100vw;
-  background-color: #283046; /* Cor de fundo escura */
+  width: 100%;
+  background-color: #283046;
   color: white;
-  font-family: sans-serif;
   padding: 40px;
   box-sizing: border-box;
 }
@@ -14,34 +12,50 @@
   margin-bottom: 60px;
 }
 
-.header h1 {
+.backButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+
+.title {
   font-size: 40px;
   margin: 0;
 }
 
-.main-content {
+.subtitle {
+  color: #b0b0b0;
+  margin: 10px 0 0 0;
+}
+
+.mainContent {
   max-width: 900px;
   margin: 0 auto;
 }
 
-.search-input {
-  width: 100%;
-  padding: 20px;
-  border-radius: 8px;
-  border: none;
+.search {
   margin-bottom: 40px;
-  font-size: 16px;
-  box-sizing: border-box;
 }
 
-.tabs-container {
+.searchInput {
+  width: 100%;
+  padding: 20px;
+  border-radius: 0px;
+  border: none;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.tabsContainer {
   display: flex;
   gap: 2px;
   border-bottom: 2px solid #3d4a63;
-  width: 100%;
 }
 
-.tab-button {
+.tabButton {
   flex: 1;
   padding: 20px;
   background-color: #283046;
@@ -49,11 +63,20 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
+  transition: 0.2s;
 }
 
-.tab-button.active {
+.tabButton:hover {
+  background-color: #35415a;
+}
+
+.active {
   background-color: #3d4a63;
   font-weight: bold;
+}
+
+.listContainer {
+  margin-top: 40px;
 }
 
 .card {
@@ -67,10 +90,71 @@
   margin-bottom: 20px;
 }
 
-.cancel-button {
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  font-size: 40px;
+}
+
+.userName {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+.userStatus {
+  color: #666;
+  font-size: 14px;
+  margin: 5px 0 0 0;
+}
+
+.actionButtonAceitar, .actionButtonCancelar, .actionButtonRemover, .actionButtonEnviar{
   padding: 12px 25px;
-  background-color: #f8f9fa;
-  border: 1px solid #ccc;
+  border: 5px;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.actionButtonCancelar:hover, .actionButtonRemover:hover {
+  background-color: rgb(239, 48, 48);
+}
+
+.actionButtonAceitar:hover, .actionButtonEnviar:hover {
+  background-color: green;
+}
+
+.emptyMessage {
+  text-align: center;
+  margin-top: 40px;
+  color: #b0b0b0;
+}
+
+.searchResults {
+  background: #1f2633;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.searchItem {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #2e3748;
+  color: white;
+  margin: 10px;
+}
+
+.searchItem:last-child {
+  border-bottom: none;
+}
+
+.actionsContainer {
+  display: flex;
+  gap: 15px; 
+  align-items: flex-end;
 }

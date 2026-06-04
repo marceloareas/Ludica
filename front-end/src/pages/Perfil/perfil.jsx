@@ -76,7 +76,7 @@ export default function Perfil() {
             className={registerStyles.input} 
             type="password" 
             placeholder="Nova senha" 
-            value={formData.senha} // Adicione isso
+            value={formData.senha} 
             onChange={(e) => setFormData({...formData, senha: e.target.value})} 
           />
           
@@ -84,7 +84,7 @@ export default function Perfil() {
             className={registerStyles.input} 
             type="password" 
             placeholder="Confirmar senha" 
-            value={formData.confirmaSenha} // Adicione isso
+            value={formData.confirmaSenha} 
             onChange={(e) => setFormData({...formData, confirmaSenha: e.target.value})} 
           />
 

@@ -107,3 +107,37 @@ exports.getUserWithAvatar = async (id) => {
 
     return result.rows[0];
 };
+
+exports.recusarSolicitacao = async (id_usuario_1, id_usuario_2) => {
+    const result = await db.query(
+        `
+        UPDATE amizade
+        SET status = 'Recusado'
+        WHERE id_usuario_1 = $1
+        AND id_usuario_2 = $2
+        AND status = 'Pendente'
+        RETURNING *;
+        `,
+        [id_usuario_1, id_usuario_2]
+    );
+
+    if (result.rowCount === 0) {
+        throw new Error('Solicitação não encontrada');
+    }
+
+    return result.rows[0];
+};
+
+exports.searchByUserName = async (userName) => {
+  const result = await db.query(
+    `
+    SELECT id_usuario, nome_usuario, email
+    FROM usuarios
+    WHERE nome_usuario ILIKE $1
+    LIMIT 10
+    `,
+    [`%${userName}%`]
+  );
+
+  return result.rows;
+};

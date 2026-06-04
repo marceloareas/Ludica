@@ -70,3 +70,12 @@ exports.getUserWithAvatar = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.searchUsers = async (req, res) => {
+    try {
+        const users = await userService.searchByUserName(req.params.query);
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

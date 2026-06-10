@@ -23,19 +23,21 @@ function Input() {
         })
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Erro ao fazer login')
+        alert(data.error || 'Erro ao fazer login')
+        return
       }
 
-      const data = await response.json()
       console.log('Login bem-sucedido:', data)
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('id_user', data.user.id);
-      localStorage.setItem('userName', data.user.userName);
-      localStorage.setItem('email', data.user.email);
-      localStorage.setItem('nome_completo', data.user.nome_completo);
-      localStorage.setItem('data_nascimento', data.user.data_nascimento);
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user_id', data.user.id) 
+      localStorage.setItem('userName', data.user.userName)
+      localStorage.setItem('email', data.user.email)
+      localStorage.setItem('nome_completo', data.user.nome_completo)
+      localStorage.setItem('data_nascimento', data.user.data_nascimento)
 
       navigate("/home")
 
@@ -43,19 +45,15 @@ function Input() {
       console.error(err)
       alert('Erro no login')
     }
-
-
   }
 
   return (
     <section className={styles.center}>
-      
       <div className={styles.h1TextMain}>
         <h1>Entrar</h1>
       </div>
 
       <form className={styles.form} onSubmit={handleLogin}>
-
         <input
           className={styles.input}
           type="text"
@@ -75,7 +73,6 @@ function Input() {
         <button type="submit" className={styles.enterLogin}>
           Entrar
         </button>
-
       </form>
 
       <p onClick={() => navigate("/register")}>
@@ -84,7 +81,6 @@ function Input() {
           Criar uma
         </span>
       </p>
-
     </section>
   )
 }

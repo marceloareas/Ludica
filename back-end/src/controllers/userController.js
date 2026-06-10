@@ -1,4 +1,5 @@
 const userService = require('../services/userService');
+const pool = require('../db/db');
 
 exports.register = async (req, res) => {
     try {
@@ -78,4 +79,18 @@ exports.searchUsers = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { senhaAtual, novaSenha } = req.body;
+
+    const result = await userService.changePassword(id, senhaAtual, novaSenha);
+
+    return res.status(200).json(result);
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };

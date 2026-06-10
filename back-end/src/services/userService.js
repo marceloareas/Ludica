@@ -141,3 +141,31 @@ exports.searchByUserName = async (userName) => {
 
   return result.rows;
 };
+
+exports.changePassword = async (id, senhaAtual, novaSenha) => {
+  const userResult = await db.query(
+    'SELECT * FROM usuarios WHERE id_usuario = $1',
+    [id]
+  );
+
+  const user = userResult.rows[0];
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const senhaOk = await bcrypt.compare(senhaAtual, user.senha);
+
+  if (!senhaOk) {
+    throw new Error('Senha atual incorreta');
+  }
+
+  const hash = await bcrypt.hash(novaSenha, 10);
+
+  await db.query(
+    'UPDATE usuarios SET senha = $1 WHERE id_usuario = $2',
+    [hash, id]
+  );
+
+  return { message: 'Senha alterada com sucesso' };
+};

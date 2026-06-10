@@ -195,35 +195,6 @@ async function seed() {
 
         console.log('✅ Histórico inserido');
 
-        // AMIZADES
-        await db.query(`
-            INSERT INTO amizade (
-                id_usuario_1,
-                id_usuario_2,
-                status,
-                data_conexao
-            )
-            VALUES
-            (
-                $1,
-                $2,
-                'Aceito',
-                NOW()
-            ),
-            (
-                $2,
-                $3,
-                'Pendente',
-                NOW()
-            );
-        `, [
-            user1.id_usuario,
-            user3.id_usuario,
-            user2.id_usuario
-        ]);
-
-        console.log('✅ Amizades inseridas');
-
         console.log('🎉 Seed executada com sucesso!');
 
         process.exit();

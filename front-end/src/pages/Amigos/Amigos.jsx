@@ -18,7 +18,7 @@ const AmigosDashboard = () => {
   const navigate = useNavigate();
 
   const idUsuario = Number(localStorage.getItem('id_user'));
-
+console.log('ID usuário logado:', idUsuario);
   useEffect(() => {
     carregarDados();
   }, []);

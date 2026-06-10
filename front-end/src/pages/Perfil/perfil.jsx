@@ -50,7 +50,7 @@ export default function Perfil() {
         return;
       }
 
-      const userId = localStorage.getItem('user_id');
+      const userId = localStorage.getItem('id_user');
 
       const response = await fetch(
         `http://localhost:3000/users/${userId}/password`,

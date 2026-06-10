@@ -10,6 +10,7 @@ export default function Navbar({ activePage }) {
     localStorage.removeItem('id_user');
     localStorage.removeItem('avatar');
     
+    
     // Agora redireciona para a tela de Login ou Home
     navigate('/'); 
   };

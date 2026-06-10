@@ -15,13 +15,11 @@ function GameCard({ game, score }) {
         </div>
       )}
 
-      
-      <div className={styles.gameThumbnail}></div>
-
-      <div className={styles.gameCardBody}>
-        <h3>{game.titulo}</h3>
-        <p>{game.descricao}</p>
-      </div>
+     <img
+        src={`/images/${game.id_jogo}.jpeg`}
+        alt={game.titulo}
+        className={styles.gameThumbnail}
+      />
 
       <div className={styles.gameCardFooter}>
         <span className={styles.gameScore}>

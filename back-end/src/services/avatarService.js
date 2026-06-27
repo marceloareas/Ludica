@@ -3,14 +3,14 @@ const db = require('../db/db.js');
 exports.createOrUpdateAvatar = async (userId, aparenciaJson) => {
 
     const avatarExiste = await db.query(
-        `SELECT * FROM avatares WHERE id_usuario = $1`,
+        `SELECT * FROM avatar WHERE id_usuario = $1`,
         [userId]
     );
 
     if (avatarExiste.rows.length > 0) {
 
         const result = await db.query(
-            `UPDATE avatares
+            `UPDATE avatar
              SET aparencia_json = $1
              WHERE id_usuario = $2
              RETURNING *`,
@@ -22,7 +22,7 @@ exports.createOrUpdateAvatar = async (userId, aparenciaJson) => {
     else {
         
         const result = await db.query(
-            `INSERT INTO avatares
+            `INSERT INTO avatar
             (id_usuario, aparencia_json)
             VALUES ($1, $2)
             RETURNING *`,
@@ -37,7 +37,7 @@ exports.createOrUpdateAvatar = async (userId, aparenciaJson) => {
 exports.getAvatar = async (userId) => {
 
     const result = await db.query(
-        `SELECT * FROM avatares
+        `SELECT * FROM avatar
          WHERE id_usuario = $1`,
         [userId]
     );

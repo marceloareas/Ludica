@@ -3,7 +3,7 @@ const db = require('../db/db.js');
 exports.createGame = async (data) => {
 
     const result = await db.query(
-        `INSERT INTO jogos
+        `INSERT INTO jogo
         (
             codigo_jogo,
             titulo,
@@ -29,7 +29,7 @@ exports.createGame = async (data) => {
 exports.getAllGames = async () => {
 
     const result = await db.query(
-        `SELECT * FROM jogos`
+        `SELECT * FROM jogo`
     );
 
     return result.rows;
@@ -38,7 +38,7 @@ exports.getAllGames = async () => {
 exports.getGameById = async (id) => {
 
     const result = await db.query(
-        `SELECT * FROM jogos
+        `SELECT * FROM jogo
          WHERE id_jogo = $1`,
         [id]
     );
@@ -49,7 +49,7 @@ exports.getGameById = async (id) => {
 exports.deleteGame = async (id) => {
 
     await db.query(
-        `DELETE FROM jogos
+        `DELETE FROM jogo
          WHERE id_jogo = $1`,
         [id]
     );

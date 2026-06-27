@@ -10,7 +10,7 @@ async function seed() {
       TRUNCATE amizade,
       historico_partida,
       pontuacao,
-      avatare,
+      avatar,
       jogo,
       usuario
       RESTART IDENTITY CASCADE;
@@ -44,9 +44,9 @@ async function seed() {
 
     console.log('👤 Usuários criados');
 
-    // ---------------- AVATARE ----------------
+    // ---------------- AVATAR ----------------
     await db.query(`
-      INSERT INTO avatare (id_usuario, aparencia_json)
+      INSERT INTO avatar (id_usuario, aparencia_json)
       VALUES
       ($1, '{"cabelo":"azul","roupa":"armadura","olhos":"verde"}'),
       ($2, '{"cabelo":"preto","roupa":"casual","olhos":"castanho"}'),
@@ -61,7 +61,7 @@ async function seed() {
       admin.id_usuario
     ]);
 
-    console.log('🎭 Avatare criados');
+    console.log('🎭 Avatar criados');
 
     // ---------------- JOGO ----------------
     const jogo = await db.query(`
@@ -79,10 +79,11 @@ async function seed() {
       ('G001', 'Math Challenge', 'Matemática divertida', 'https://game1.com', '\\images\\1.jpeg', $1, NOW()),
       ('G002', 'Memory Master', 'Jogo de memória avançado', 'https://game2.com', '\\images\\2.jpeg', $1, NOW()),
       ('G003', 'Typing Speed', 'Teste de digitação', 'https://game3.com', '\\images\\3.jpeg', $1, NOW()),
+      ('G004', 'Xadrez', 'Xadrez', 'https://game4.com', '\\images\\Xadrez.png', $1, NOW())
       RETURNING *;
     `, [admin.id_usuario]);
 
-    const [game1, game2, game3] = jogo.rows;
+    const [game1, game2, game3, game4] = jogo.rows;
 
     console.log('🎮 Jogo criados');
 
@@ -117,6 +118,7 @@ async function seed() {
       game1.id_jogo,
       game2.id_jogo,
       game3.id_jogo,
+      game4.id_jogo,
     ]);
 
     console.log('🏆 Pontuação criada');
@@ -168,6 +170,7 @@ async function seed() {
       game1.id_jogo,
       game2.id_jogo,
       game3.id_jogo,
+      game4.id_jogo
     ]);
 
     console.log('📜 Histórico completo criado');

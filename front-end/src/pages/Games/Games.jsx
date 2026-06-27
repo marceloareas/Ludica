@@ -16,7 +16,8 @@ function GameCard({ game, score }) {
       )}
 
      <img
-        src={`/images/${game.id_jogo}.jpeg`}
+        //src={`/images/${game.id_jogo}.jpeg`}
+        src={game.imagem}
         alt={game.titulo}
         className={styles.gameThumbnail}
       />
@@ -50,6 +51,7 @@ export default function Games() {
       try {
         const response = await fetch('http://localhost:3000/games')
         const data = await response.json()
+        console.log('Dados recebidos da API:', data);
 
         setHistory(data)
         setGames(data)

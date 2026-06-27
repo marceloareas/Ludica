@@ -70,7 +70,7 @@ exports.listarAmigos = async (id_usuario) => {
         `SELECT
             u.id_usuario,
             u.nome_usuario
-         FROM usuarios u
+         FROM usuario u
          JOIN (
             SELECT
                 CASE
@@ -100,7 +100,7 @@ exports.listarSolicitacoesPendentes = async (id_usuario) => {
             u.nome_usuario,
             a.data_conexao
          FROM amizade a
-         JOIN usuarios u
+         JOIN usuario u
             ON u.id_usuario = a.id_usuario_1
          WHERE a.id_usuario_2 = $1
          AND a.status = 'Pendente'`,
@@ -117,7 +117,7 @@ exports.listarSolicitacoesEnviadas = async (id_usuario) => {
             u.nome_usuario,
             a.data_conexao
          FROM amizade a
-         JOIN usuarios u
+         JOIN usuario u
             ON u.id_usuario = a.id_usuario_2
          WHERE a.id_usuario_1 = $1
          AND a.status = 'Pendente'`,
@@ -177,8 +177,8 @@ exports.obterRankingPorJogo = async (id_usuario, id_jogo) => {
             WHEN u.id_usuario = $1 THEN true 
             ELSE false 
         END AS is_me
-    FROM usuarios u
-    LEFT JOIN historico_partidas h 
+    FROM usuario u
+    LEFT JOIN historico_partida h 
         ON h.id_usuario = u.id_usuario 
         AND h.id_jogo = $2
     WHERE u.id_usuario = $1

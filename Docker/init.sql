@@ -1,5 +1,6 @@
 -- 1. Tabela Principal de Usuários
-CREATE TABLE usuarios (
+-- Alterado o nome da tabela de "usuarios" para "usuario".
+CREATE TABLE usuario (
     id_usuario SERIAL PRIMARY KEY,
     nome_usuario VARCHAR(100),
     email VARCHAR(100) UNIQUE,
@@ -12,23 +13,26 @@ CREATE TABLE usuarios (
 );
 
 -- 2. Customização do Aluno (Relacionamento 1:1)
-CREATE TABLE avatares (
+-- Alterado o nome da tabela de "avatares" para "avatar".
+CREATE TABLE avatar (
     id_avatar SERIAL PRIMARY KEY,
     id_usuario INT UNIQUE,
     aparencia_json TEXT,
-    CONSTRAINT fk_avatar_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+    CONSTRAINT fk_avatar_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
 -- 3. Catálogo de Jogos
-CREATE TABLE jogos (
+-- Alterado o nome da tabela de "jogos" para "jogo".
+CREATE TABLE jogo (
     id_jogo SERIAL PRIMARY KEY,
     codigo_jogo CHAR(5),
     titulo VARCHAR(100),
     descricao TEXT,
     url_recurso VARCHAR(255),
+    url_imagem TEXT,
     id_admin_criador INT,
     data_criacao DATE,
-    CONSTRAINT fk_jogos_admin FOREIGN KEY (id_admin_criador) REFERENCES usuarios(id_usuario)
+    CONSTRAINT fk_jogos_admin FOREIGN KEY (id_admin_criador) REFERENCES usuario(id_usuario)
 );
 
 -- 4. Registro de Performance (Saldo Atual / Ranking)
@@ -37,19 +41,20 @@ CREATE TABLE pontuacao (
     id_usuario INT,
     id_jogo INT,
     pontos_acumulados INT DEFAULT 0,
-    CONSTRAINT fk_pontuacao_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-    CONSTRAINT fk_pontuacao_jogo FOREIGN KEY (id_jogo) REFERENCES jogos(id_jogo)
+    CONSTRAINT fk_pontuacao_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_pontuacao_jogo FOREIGN KEY (id_jogo) REFERENCES jogo(id_jogo)
 );
 
 -- 5. Registro de Histórico de Partidas (O Extrato)
-CREATE TABLE historico_partidas (
+-- Alterado o nome da tabela de "historico_partidas" para "historico_partida".
+CREATE TABLE historico_partida (
     id_historico SERIAL PRIMARY KEY,
     id_usuario INT,
     id_jogo INT,
     pontos_obtidos INT,
     data_partida TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT fk_historico_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-    CONSTRAINT fk_historico_jogo FOREIGN KEY (id_jogo) REFERENCES jogos(id_jogo)
+    CONSTRAINT fk_historico_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_historico_jogo FOREIGN KEY (id_jogo) REFERENCES jogo(id_jogo)
 );
 
 -- 6. Sistema de Amizades (Autorrelacionamento)
@@ -59,7 +64,7 @@ CREATE TABLE amizade (
     status VARCHAR(20), -- Pendente ou Aceito
     data_conexao TIMESTAMP,
     PRIMARY KEY (id_usuario_1, id_usuario_2),
-    CONSTRAINT fk_amizade_user1 FOREIGN KEY (id_usuario_1) REFERENCES usuarios(id_usuario),
-    CONSTRAINT fk_amizade_user2 FOREIGN KEY (id_usuario_2) REFERENCES usuarios(id_usuario)
+    CONSTRAINT fk_amizade_user1 FOREIGN KEY (id_usuario_1) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_amizade_user2 FOREIGN KEY (id_usuario_2) REFERENCES usuario(id_usuario)
 );
 

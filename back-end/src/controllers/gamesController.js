@@ -33,15 +33,17 @@ exports.getAll = async (req, res) => {
 
                 COALESCE(p.pontos_acumulados, 0) AS pontuacao,
 
-                MAX(h.data_partida) AS ultimo_acesso
+                MAX(h.data_partida) AS ultimo_acesso,
 
-            FROM jogos j
+                j.url_imagem AS IMAGEM
+
+            FROM jogo j
 
             LEFT JOIN pontuacao p
                 ON j.id_jogo = p.id_jogo
                 AND p.id_usuario = $1
 
-            LEFT JOIN historico_partidas h
+            LEFT JOIN historico_partida h
                 ON j.id_jogo = h.id_jogo
                 AND h.id_usuario = $1
 

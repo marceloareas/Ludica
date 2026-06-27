@@ -6,7 +6,7 @@ const SECRET = 'segredo_super_secreto';
 
 
 exports.getAll = async () => {
-    const result = await db.query('SELECT * FROM usuarios');
+    const result = await db.query('SELECT * FROM usuario');
     return result.rows;
 };
 
@@ -22,7 +22,7 @@ exports.register = async (data) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await db.query(
-        `INSERT INTO usuarios 
+        `INSERT INTO usuario 
         (email, nome_completo, nome_usuario, senha, data_nascimento, tipo_usuario, flag_usuario)
         VALUES ($1,$2,$3,$4,$5,'Jogador','A')
         RETURNING *`,
@@ -34,7 +34,7 @@ exports.register = async (data) => {
 
 exports.login = async (userName, password) => {
     const result = await db.query(
-        `SELECT * FROM usuarios WHERE nome_usuario = $1`,
+        `SELECT * FROM usuario WHERE nome_usuario = $1`,
         [userName]
     );
 
@@ -70,7 +70,7 @@ exports.login = async (userName, password) => {
 
 exports.update = async (id, data) => {
     const result = await db.query(
-        `UPDATE usuarios 
+        `UPDATE usuario
          SET userName=$1, email=$2, nome_completo=$3
          WHERE id_usuario=$4
          RETURNING *`,
@@ -86,7 +86,7 @@ exports.update = async (id, data) => {
 
 exports.remove = async (id) => {
     const result = await db.query(
-        `DELETE FROM usuarios WHERE id_usuario=$1 RETURNING *`,
+        `DELETE FROM usuario WHERE id_usuario=$1 RETURNING *`,
         [id]
     );
 
@@ -98,8 +98,8 @@ exports.remove = async (id) => {
 exports.getUserWithAvatar = async (id) => {
     const result = await db.query(
         `SELECT u.*, a.aparencia_json
-         FROM usuarios u
-         LEFT JOIN avatares a 
+         FROM usuario u
+         LEFT JOIN avatar a 
          ON u.id_usuario = a.id_usuario
          WHERE u.id_usuario = $1`,
         [id]
@@ -132,7 +132,7 @@ exports.searchByUserName = async (userName) => {
   const result = await db.query(
     `
     SELECT id_usuario, nome_usuario, email
-    FROM usuarios
+    FROM usuario
     WHERE nome_usuario ILIKE $1
     LIMIT 10
     `,
@@ -144,7 +144,7 @@ exports.searchByUserName = async (userName) => {
 
 exports.changePassword = async (id, senhaAtual, novaSenha) => {
   const userResult = await db.query(
-    'SELECT * FROM usuarios WHERE id_usuario = $1',
+    'SELECT * FROM usuario WHERE id_usuario = $1',
     [id]
   );
 
@@ -163,7 +163,7 @@ exports.changePassword = async (id, senhaAtual, novaSenha) => {
   const hash = await bcrypt.hash(novaSenha, 10);
 
   await db.query(
-    'UPDATE usuarios SET senha = $1 WHERE id_usuario = $2',
+    'UPDATE usuario SET senha = $1 WHERE id_usuario = $2',
     [hash, id]
   );
 

@@ -137,6 +137,12 @@ console.log('ID usuário logado:', idUsuario);
   };
 
   const removerAmigo = async (idAmigo) => {
+    const confirmar = window.confirm(
+      'Tem certeza que deseja remover este amigo?'
+    );
+
+    if (!confirmar) return;
+
     await fetch('http://localhost:3000/friends/delete', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
@@ -151,6 +157,12 @@ console.log('ID usuário logado:', idUsuario);
 
 
   const recusarSolicitacao = async (idRemetente) => {
+    const confirmar = window.confirm(
+      'Tem certeza que deseja recusar esta solicitação?'
+    );
+
+    if (!confirmar) return;
+
     await fetch('http://localhost:3000/friends/recusar', {
       method: 'PUT',
       headers: {

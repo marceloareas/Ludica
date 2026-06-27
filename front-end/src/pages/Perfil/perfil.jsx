@@ -149,13 +149,6 @@ export default function Perfil() {
             }
           />
 
-          <input
-            className={registerStyles.input}
-            type="password"
-            value="********"
-            disabled
-          />
-
           <button
             type="button"
             className={styles.changePassword}
@@ -223,21 +216,22 @@ export default function Perfil() {
               />
 
               <div className={styles.modalActions}>
-                <button
-                  type="button"
-                  className={registerStyles.enterLogin}
-                  onClick={handleChangePassword}
-                >
-                  Salvar
-                </button>
 
-               <button
+              <button
                 type="button"
                 className={styles.cancelChangePassword}
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancelar
               </button>
+
+              <button
+                  type="button"
+                  className={registerStyles.enterLogin}
+                  onClick={handleChangePassword}
+                >
+                  Salvar
+                </button>
               </div>
             </div>
           </div>

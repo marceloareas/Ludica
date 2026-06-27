@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AvatarDisplay } from '../../components/Avatar/AvatarDisplay';
 import Layout from '../../components/Layout/Layout';
-import styles from './perfil.module.css';
+import perfilStyles from './perfil.module.css';
 import registerStyles from '../Register/register.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -88,9 +88,9 @@ export default function Perfil() {
 
   return (
     <Layout activePage="perfil">
-      <main className={`${registerStyles.center} ${styles.profileContainer}`}>
+      <main className={`${registerStyles.center} ${perfilStyles.profileContainer}`}>
 
-        <div className={styles.profileHeader}>
+        <div className={perfilStyles.profileHeader}>
           <AvatarDisplay config={avatarConfig} size={120} />
           <h2>{formData.namertag}</h2>
 
@@ -104,7 +104,7 @@ export default function Perfil() {
 
         <form className={registerStyles.form}>
 
-          <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
+          <h3 className={perfilStyles.sectionTitle}>Dados Pessoais</h3>
 
           <input
             className={registerStyles.input}
@@ -151,7 +151,7 @@ export default function Perfil() {
 
           <button
             type="button"
-            className={styles.changePassword}
+            className={perfilStyles.changePassword}
             onClick={() => setIsModalOpen(true)}
           >
             Alterar senha
@@ -178,8 +178,8 @@ export default function Perfil() {
 
   
         {isModalOpen && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modal}>
+          <div className={perfilStyles.modalOverlay}>
+            <div className={perfilStyles.modal}>
               <h3>Alterar senha</h3>
 
               <input
@@ -215,11 +215,11 @@ export default function Perfil() {
                 }
               />
 
-              <div className={styles.modalActions}>
+              <div className={perfilStyles.modalActions}>
 
               <button
                 type="button"
-                className={styles.cancelChangePassword}
+                className={registerStyles.enterLogin}
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancelar

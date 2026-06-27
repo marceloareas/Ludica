@@ -1,8 +1,8 @@
-const friendService = require('../services/friendsService');
+const friendsService = require('../services/friendsService');
 
 exports.enviar = async (req, res) => {
     try {
-        const friend = await friendService.enviarSolicitacao(
+        const friend = await friendsService.enviarSolicitacao(
             req.body.id_usuario_1,
             req.body.id_usuario_2
         );
@@ -17,7 +17,7 @@ exports.enviar = async (req, res) => {
 
 exports.aceitar = async (req, res) => {
     try {
-        const friend = await friendService.aceitarSolicitacao(
+        const friend = await friendsService.aceitarSolicitacao(
             req.body.id_usuario_1,
             req.body.id_usuario_2
         );
@@ -32,7 +32,7 @@ exports.aceitar = async (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        const amigos = await friendService.listarAmigos(
+        const amigos = await friendsService.listarAmigos(
             req.params.id_usuario
         );
 
@@ -47,7 +47,7 @@ exports.listar = async (req, res) => {
 exports.listarPendentes = async (req, res) => {
     try {
         const solicitacoes =
-            await friendService.listarSolicitacoesPendentes(
+            await friendsService.listarSolicitacoesPendentes(
                 req.params.id_usuario
             );
 
@@ -62,7 +62,7 @@ exports.listarPendentes = async (req, res) => {
 exports.listarEnviados = async (req, res) => {
     try {
         const solicitacoes =
-            await friendService.listarSolicitacoesEnviadas(
+            await friendsService.listarSolicitacoesEnviadas(
                 req.params.id_usuario
             );
 
@@ -76,7 +76,7 @@ exports.listarEnviados = async (req, res) => {
 
 exports.remover = async (req, res) => {
   try {
-    const amizade = await friendService.removerAmizade(
+    const amizade = await friendsService.removerAmizade(
       req.body.id_usuario_1,
       req.body.id_usuario_2
     );
@@ -89,7 +89,7 @@ exports.remover = async (req, res) => {
 
 exports.recusar = async (req, res) => {
   try {
-    const amizade = await friendService.recusarSolicitacao(
+    const amizade = await friendsService.recusarSolicitacao(
       req.body.id_usuario_1,
       req.body.id_usuario_2
     );
@@ -97,5 +97,23 @@ exports.recusar = async (req, res) => {
     res.json(amizade);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.obterRankingPorJogo = async (req, res) => {
+  try {
+    const { id_usuario, id_jogo } = req.params;
+
+    const ranking = await friendsService.obterRankingPorJogo(
+      Number(id_usuario),
+      Number(id_jogo)
+    );
+
+    return res.status(200).json(ranking);
+
+  } catch (error) {
+    console.error("ERRO RANKING:", error);
+    return res.status(500).json({ error: error.message });
   }
 };

@@ -124,6 +124,12 @@ console.log('ID usuário logado:', idUsuario);
   };
 
   const cancelarPedidoEnviado = async (idDestino) => {
+    const confirmar = window.confirm(
+      'Tem certeza que deseja cancelar solicitação de amizade?'
+    );
+
+    if (!confirmar) return;
+
     await fetch('http://localhost:3000/friends/delete', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },

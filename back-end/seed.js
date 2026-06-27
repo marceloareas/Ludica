@@ -2,209 +2,181 @@ const db = require('./src/db/db');
 const bcrypt = require('bcrypt');
 
 async function seed() {
-    try {
+  try {
+    console.log('🌱 Iniciando seed avançado...');
 
-        console.log('🌱 Iniciando seed...');
+    // ---------------- CLEAN ----------------
+    await db.query(`
+      TRUNCATE amizade,
+      historico_partida,
+      pontuacao,
+      avatare,
+      jogo,
+      usuario
+      RESTART IDENTITY CASCADE;
+    `);
 
-        await db.query(`
-            TRUNCATE amizade,
-            historico_partidas,
-            pontuacao,
-            avatares,
-            jogos,
-            usuarios
-            RESTART IDENTITY CASCADE;
-        `);
+    console.log('🧹 Banco limpo');
 
-        console.log('🧹 Banco limpo');
+    const senha = await bcrypt.hash('123456', 10);
 
-        const senhaTeste = await bcrypt.hash('senha123', 10);
-        const senhaAdmin = await bcrypt.hash('admin123', 10);
-        const senhaPlayer = await bcrypt.hash('player123', 10);
+    // ---------------- USUÁRIOS ----------------
+    const usuario = await db.query(`
+      INSERT INTO usuario (
+        nome_usuario,
+        email,
+        data_nascimento,
+        senha,
+        nome_completo,
+        tipo_usuario,
+        flag_usuario
+      )
+      VALUES
+      ('alice', 'alice@email.com', '2000-01-01', $1, 'Alice Silva', 'Jogador', 'A'),
+      ('bob', 'bob@email.com', '2001-02-10', $1, 'Bob Santos', 'Jogador', 'A'),
+      ('carol', 'carol@email.com', '1999-05-20', $1, 'Carol Lima', 'Jogador', 'A'),
+      ('david', 'david@email.com', '2002-08-15', $1, 'David Souza', 'Jogador', 'A'),
+      ('admin', 'admin@email.com', '1990-01-01', $1, 'Admin Master', 'Administrador', 'A')
+      RETURNING *;
+    `, [senha]);
 
-        const usuarios = await db.query(`
-            INSERT INTO usuarios (
-                nome_usuario,
-                email,
-                data_nascimento,
-                senha,
-                nome_completo,
-                tipo_usuario,
-                flag_usuario
-            )
-            VALUES
-            (
-                'teste',
-                'teste@email.com',
-                '2000-01-01',
-                $1,
-                'Teste User',
-                'Jogador',
-                'A'
-            ),
-            (
-                'admin01',
-                'admin@email.com',
-                '1995-05-10',
-                $2,
-                'Administrador Master',
-                'Administrador',
-                'A'
-            ),
-            (
-                'player01',
-                'player@email.com',
-                '2003-08-15',
-                $3,
-                'Jogador Teste',
-                'Jogador',
-                'A'
-            )
-            RETURNING *;
-        `, [
-            senhaTeste,
-            senhaAdmin,
-            senhaPlayer
-        ]);
+    const [alice, bob, carol, david, admin] = usuario.rows;
 
-        console.log('✅ Usuários inseridos');
+    console.log('👤 Usuários criados');
 
-        const user1 = usuarios.rows[0];
-        const user2 = usuarios.rows[1];
-        const user3 = usuarios.rows[2];
+    // ---------------- AVATARE ----------------
+    await db.query(`
+      INSERT INTO avatare (id_usuario, aparencia_json)
+      VALUES
+      ($1, '{"cabelo":"azul","roupa":"armadura","olhos":"verde"}'),
+      ($2, '{"cabelo":"preto","roupa":"casual","olhos":"castanho"}'),
+      ($3, '{"cabelo":"loiro","roupa":"mago","olhos":"azul"}'),
+      ($4, '{"cabelo":"ruivo","roupa":"ninja","olhos":"preto"}'),
+      ($5, '{"cabelo":"branco","roupa":"terno","olhos":"vermelho"}');
+    `, [
+      alice.id_usuario,
+      bob.id_usuario,
+      carol.id_usuario,
+      david.id_usuario,
+      admin.id_usuario
+    ]);
 
-        await db.query(`
-            INSERT INTO avatares (
-                id_usuario,
-                aparencia_json
-            )
-            VALUES
-            (
-                $1,
-                '{"cabelo":"azul","roupa":"armadura","olhos":"verde"}'
-            ),
-            (
-                $2,
-                '{"cabelo":"preto","roupa":"terno","olhos":"castanho"}'
-            ),
-            (
-                $3,
-                '{"cabelo":"loiro","roupa":"mago","olhos":"azul"}'
-            );
-        `, [
-            user1.id_usuario,
-            user2.id_usuario,
-            user3.id_usuario
-        ]);
+    console.log('🎭 Avatare criados');
 
-        console.log('✅ Avatares inseridos');
+    // ---------------- JOGO ----------------
+    const jogo = await db.query(`
+      INSERT INTO jogo (
+        codigo_jogo,
+        titulo,
+        descricao,
+        url_recurso,
+        url_imagem,
 
-        const jogos = await db.query(`
-            INSERT INTO jogos (
-                codigo_jogo,
-                titulo,
-                descricao,
-                url_recurso,
-                id_admin_criador,
-                data_criacao
-            )
-            VALUES
-            (
-                'G001',
-                'Math Challenge',
-                'Jogo de matemática educativa',
-                'https://mathgame.com',
-                $1,
-                NOW()
-            ),
-            (
-                'G002',
-                'Memory Game',
-                'Jogo da memória',
-                'https://memorygame.com',
-                $1,
-                NOW()
-            ),
-            (
-                'G003',
-                'Typing Speed',
-                'Teste de velocidade de digitação',
-                'https://typinggame.com',
-                $1,
-                NOW()
-            )
-            RETURNING *;
-        `, [user2.id_usuario]);
+        id_admin_criador,
+        data_criacao
+      )
+      VALUES
+      ('G001', 'Math Challenge', 'Matemática divertida', 'https://game1.com', '\\images\\1.jpeg', $1, NOW()),
+      ('G002', 'Memory Master', 'Jogo de memória avançado', 'https://game2.com', '\\images\\2.jpeg', $1, NOW()),
+      ('G003', 'Typing Speed', 'Teste de digitação', 'https://game3.com', '\\images\\3.jpeg', $1, NOW()),
+      RETURNING *;
+    `, [admin.id_usuario]);
 
-        console.log('✅ Jogos inseridos');
+    const [game1, game2, game3] = jogo.rows;
 
-        const jogo1 = jogos.rows[0];
-        const jogo2 = jogos.rows[1];
-        const jogo3 = jogos.rows[2];
+    console.log('🎮 Jogo criados');
 
-        await db.query(`
-            INSERT INTO pontuacao (
-                id_usuario,
-                id_jogo,
-                pontos_acumulados
-            )
-            VALUES
-            ($1, $2, 1500),
-            ($3, $2, 3000),
-            ($1, $4, 900),
-            ($3, $5, 4500);
-        `, [
-            user1.id_usuario,
-            jogo1.id_jogo,
-            user3.id_usuario,
-            jogo2.id_jogo,
-            jogo3.id_jogo
-        ]);
+    // ---------------- PONTUAÇÃO ----------------
+    await db.query(`
+      INSERT INTO pontuacao (id_usuario, id_jogo, pontos_acumulados)
+      VALUES
+      ($1, $5, 1500),
+      ($2, $5, 2300),
+      ($3, $5, 900),
+      ($4, $5, 1800),
 
-        console.log('✅ Pontuações inseridas');
+      ($1, $6, 1200),
+      ($2, $6, 3000),
+      ($3, $6, 1100),
+      ($4, $6, 500),
 
-        // HISTÓRICO
-        await db.query(`
-            INSERT INTO historico_partidas (
-                id_usuario,
-                id_jogo,
-                pontos_obtidos
-            )
-            VALUES
+      ($1, $7, 700),
+      ($2, $7, 400),
+      ($3, $7, 2500),
+      ($4, $7, 1900),
 
-            -- USER 1
-            ($1, $2, 500),
-            ($1, $2, 1000),
-            ($1, $3, 900),
+      ($1, $8, 1000),
+      ($2, $8, 800),
+      ($3, $8, 600),
+      ($4, $8, 2700);
+    `, [
+      alice.id_usuario,
+      bob.id_usuario,
+      carol.id_usuario,
+      david.id_usuario,
+      game1.id_jogo,
+      game2.id_jogo,
+      game3.id_jogo,
+    ]);
 
-            -- USER 3
-            ($4, $2, 750),
-            ($4, $5, 3000),
-            ($4, $3, 1200),
+    console.log('🏆 Pontuação criada');
 
-            -- MAIS HISTÓRICO
-            ($1, $5, 450),
-            ($4, $3, 2000);
-        `, [
-            user1.id_usuario, // $1
-            jogo1.id_jogo,    // $2
-            jogo2.id_jogo,    // $3
-            user3.id_usuario, // $4
-            jogo3.id_jogo     // $5
-        ]);
+    // ---------------- HISTÓRICO (MUITO COMPLETO) ----------------
+    await db.query(`
+      INSERT INTO historico_partida (
+        id_usuario,
+        id_jogo,
+        pontos_obtidos
+      )
+      VALUES
 
-        console.log('✅ Histórico inserido');
+      -- GAME 1
+      ($1, $5, 200),
+      ($1, $5, 500),
+      ($2, $5, 800),
+      ($3, $5, 300),
+      ($4, $5, 700),
 
-        console.log('🎉 Seed executada com sucesso!');
+      -- GAME 2
+      ($1, $6, 600),
+      ($2, $6, 1000),
+      ($3, $6, 400),
+      ($4, $6, 200),
 
-        process.exit();
+      -- GAME 3
+      ($1, $7, 300),
+      ($2, $7, 150),
+      ($3, $7, 1200),
+      ($4, $7, 900),
 
-    } catch (error) {
+      -- GAME 4
+      ($1, $8, 500),
+      ($2, $8, 450),
+      ($3, $8, 350),
+      ($4, $8, 1400),
 
-        console.error('❌ Erro no seed:', error);
+      -- PARTIDAS EXTRAS (REALISMO)
+      ($1, $5, 100),
+      ($2, $6, 200),
+      ($3, $7, 300),
+      ($4, $8, 600);
+    `, [
+      alice.id_usuario,
+      bob.id_usuario,
+      carol.id_usuario,
+      david.id_usuario,
+      game1.id_jogo,
+      game2.id_jogo,
+      game3.id_jogo,
+    ]);
 
-        process.exit(1);
-    }
+    console.log('📜 Histórico completo criado');
+    process.exit();
+
+  } catch (err) {
+    console.error('❌ Erro no seed:', err);
+    process.exit(1);
+  }
 }
 
 seed();

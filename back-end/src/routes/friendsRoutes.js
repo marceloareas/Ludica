@@ -9,5 +9,9 @@ router.get('/enviados/:id_usuario', controller.listarEnviados);
 router.get('/:id_usuario', controller.listar);
 router.delete('/delete', controller.remover);
 router.put('/recusar', controller.recusar);
+router.get(
+    '/ranking/:id_usuario/:id_jogo',
+    controller.obterRankingPorJogo
+);
 
 module.exports = router;

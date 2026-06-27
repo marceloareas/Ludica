@@ -165,3 +165,37 @@ exports.recusarSolicitacao = async (id_remetente, id_destinatario) => {
 
     return result.rows[0];
 };
+
+exports.obterRankingPorJogo = async (id_usuario, id_jogo) => {
+  const result = await db.query(
+    `
+    SELECT 
+        u.id_usuario,
+        u.nome_usuario,
+        COALESCE(SUM(h.pontos_obtidos), 0) AS pontos_acumulados,
+        CASE 
+            WHEN u.id_usuario = $1 THEN true 
+            ELSE false 
+        END AS is_me
+    FROM usuarios u
+    LEFT JOIN historico_partidas h 
+        ON h.id_usuario = u.id_usuario 
+        AND h.id_jogo = $2
+    WHERE u.id_usuario = $1
+       OR u.id_usuario IN (
+           SELECT id_usuario_2 
+           FROM amizade 
+           WHERE id_usuario_1 = $1 AND status = 'Aceito'
+           UNION
+           SELECT id_usuario_1 
+           FROM amizade 
+           WHERE id_usuario_2 = $1 AND status = 'Aceito'
+       )
+    GROUP BY u.id_usuario
+    ORDER BY pontos_acumulados DESC;
+    `,
+    [id_usuario, id_jogo]
+  );
+
+  return result.rows;
+};

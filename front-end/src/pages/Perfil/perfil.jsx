@@ -219,7 +219,7 @@ export default function Perfil() {
 
               <button
                 type="button"
-                className={registerStyles.enterLogin}
+                className={perfilStyles.cancelChangePassword}
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancelar

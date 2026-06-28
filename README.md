@@ -54,3 +54,13 @@ Clone o repositório para a máquina local.
 - Vá até a pasta `back-end` através do terminal e rode:
 
 ```npm run dev```
+
+# Fazendo deploy da aplicação
+
+```git status```
+
+```git add .```
+
+```git commit -m "<alteracao feita>"```
+
+```git push```

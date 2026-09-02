@@ -12,7 +12,7 @@ export default function Perfil() {
     nomeCompleto: localStorage.getItem('nome_completo') || '',
     email: localStorage.getItem('email') || '',
     namertag: localStorage.getItem('userName') || '',
-    dataNascimento: localStorage.getItem('data_nascimento') || '',
+    dataNascimento: localStorage.getItem('data_nascimento')?.split('T')[0] || '',
   });
 
   const [editMode, setEditMode] = useState(false);

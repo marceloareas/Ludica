@@ -7,9 +7,13 @@ export default function Navbar({ activePage }) {
 
   const handleLogout = () => {
     // É importante limpar o localStorage para o usuário realmente deslogar
+    localStorage.removeItem('token');
+    localStorage.removeItem('userName');
     localStorage.removeItem('id_user');
+    localStorage.removeItem('email');
+    localStorage.removeItem('nome_completo');
+    localStorage.removeItem('data_nascimento');
     localStorage.removeItem('avatar');
-    
     
     // Agora redireciona para a tela de Login ou Home
     navigate('/'); 
@@ -48,14 +52,15 @@ export default function Navbar({ activePage }) {
       </nav>
       
       <div>
-        <Link to="/">
-        <button className={styles.buttonLogout}>
+        <button
+          className={styles.buttonLogout}
+          onClick={handleLogout}
+        >
           <img
-            src={`/images/logout.png`}
-            className={styles.imageLogout}
+          src={`/images/logout.png`}
+          className={styles.imageLogout}
           />
         </button>
-        </Link>
       </div>
     </header>
   );

@@ -15,7 +15,7 @@
 
 ## 1. Objetivo da Sprint
 
-A Sprint 2 teve como objetivo implementar e validar as correções e melhorias definidas após a Sprint 1, com foco na identificação correta do usuário autenticado, persistência dos dados de Perfil, recuperação automática do avatar, unicidade da Gamertag, melhoria funcional da tela de detalhamento dos jogos e diferenciação dos perfis de usuário.
+Implementar e validar as correções e melhorias definidas após a Sprint 1, com foco na identificação correta do usuário autenticado, persistência dos dados de Perfil, recuperação automática do avatar, unicidade da Gamertag, melhoria funcional da tela de detalhamento dos jogos e diferenciação dos perfis de usuário.
 
 Também foi realizado o levantamento das possíveis ações relacionadas ao perfil Administrador e ampliada a estratégia de testes do projeto, incluindo testes automatizados e geração de evidências visuais.
 

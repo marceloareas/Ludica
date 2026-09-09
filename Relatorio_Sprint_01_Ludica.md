@@ -74,7 +74,7 @@ Detalhes dos Jogos → Administrador**
 
 ## 4. Resultados dos testes
 
-  | ID | Funcionalidade | Resultado | Observação |
+| ID | Funcionalidade | Resultado | Observação |
 |---|---|---|---|
 | T01 | Cadastro | Parcial | Cadastro funciona, porém Gamertag duplicada foi aceita |
 | T02 | Login | Aprovado | Autenticação por Gamertag funcionando |
@@ -103,78 +103,29 @@ Detalhes dos Jogos → Administrador**
 
 ## 5. Dificuldades encontradas durante a Sprint
 
-  -----------------------------------------------------------------------
-  ID                      Dificuldade             Tratamento / resultado
-  ----------------------- ----------------------- -----------------------
-  D01                     Divergência entre       Identificado que o
-                          documentação e Docker   Compose atual
-                          Compose                 inicializa apenas o
-                                                  PostgreSQL; front-end e
-                                                  back-end são executados
-                                                  separadamente
+As dificuldades desta seção correspondem aos obstáculos efetivamente encontrados durante a execução das atividades da Sprint, e não às funcionalidades planejadas para versões futuras.
 
-  D02                     Porta do PostgreSQL     Confirmada a utilização
-                          diferente da            da porta externa `5433`
-                          documentação            
-
-  D03                     Biblioteca inicialmente Identificada a
-                          vazia                   necessidade de executar
-                                                  `seed.js` para carregar
-                                                  os dados de teste
-
-  D04                     Ausência de testes      Testes desta Sprint
-                          automatizados           realizados manualmente
-
-  D05                     `seed.js` reinicializa  Foi necessário
-                          os dados do banco       considerar a remoção
-                                                  dos usuários/dados
-                                                  criados durante testes
-                                                  anteriores
-
-  D06                     Comportamentos          Diferenças registradas
-                          divergentes da          como problemas ou
-                          documentação            pontos de revisão
-  -----------------------------------------------------------------------
+| ID  | Dificuldade | Tratamento / resultado |
+|-----|-------------|------------------------|
+| D01 | Divergência entre documentação e Docker Compose | Identificado que o Compose atual inicializa apenas o PostgreSQL; front-end e back-end são executados separadamente |
+| D02 | Porta do PostgreSQL diferente da documentação | Confirmada a utilização da porta externa `5433`|
+| D03 | Biblioteca inicialmente vazia | Identificada a necessidade de executar `seed.js` para carregar os dados de teste |
+| D04 | Ausência de testes automatizados | Testes desta Sprint realizados manualmente |
+| D05 | `seed.js` reinicializa os dados do banco | Foi necessário considerar a remoção dos usuários/dados criados durante testes anteriores |
+| D06 | Comportamentos divergentes da documentação | Diferenças registradas como problemas ou pontos de revisão |
 
 ## 6. Problemas e inconsistências identificados
 
-  --------------------------------------------------------------------------
-  ID                Problema             Prioridade        Situação
-  ----------------- -------------------- ----------------- -----------------
-  P01               Gamertag duplicada   Alta              Pendente
-                    permitida                              
-
-  P02               Data de nascimento   Média             **Corrigido e
-                    não exibida                            testado**
-                    corretamente no                        
-                    Perfil                                 
-
-  P03               Histórico/ranking    Alta              Pendente
-                    utiliza                                
-                    `id_usuario = 1`                       
-                    fixo                                   
-
-  P04               Botão **Jogar** sem  Alta              Pendente
-                    ação implementada                      
-
-  P05               Logout não executava Alta              **Corrigido e
-                    corretamente a                         testado**
-                    limpeza da sessão                      
-
-  P06               Avatar do usuário    Alta              **Corrigido
-                    anterior podia                         quanto ao
-                    permanecer após novo                   vazamento entre
-                    login                                  sessões**
-
-  P07               Perfil Administrador Média             Pendente
-                    não diferenciado no                    
-                    front-end                              
-
-  P08               Componentes da Home  Baixa             Pendente
-                    permanecem                             
-                    estáticos/mockados                     
-  --------------------------------------------------------------------------
-
+| ID | Problema | Prioridade | Situação |
+|---|---|---|---|
+| P01 | Gamertag duplicada permitida | Alta | Pendente |
+| P02 | Data de nascimento não exibida corretamente no Perfil | Média | **Corrigido e testado** |
+| P03 | Histórico/ranking utiliza `id_usuario = 1` fixo | Alta | Pendente |
+| P04 | Botão **Jogar** sem ação implementada | Alta | Pendente |
+| P05 | Logout não executava corretamente a limpeza da sessão | Alta | **Corrigido e testado** |
+| P06 | Avatar do usuário anterior podia permanecer após novo login | Alta | **Corrigido quanto ao vazamento entre sessões** |
+| P07 | Perfil Administrador não diferenciado no front-end | Média | Pendente |
+| P08 | Componentes da Home permanecem estáticos/mockados | Baixa | Pendente |
 ### 6.1 Gerenciamento de sessão
 
 Durante os testes foi observado que, após utilizar a conta de Alice e em

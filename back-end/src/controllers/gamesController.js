@@ -23,7 +23,13 @@ exports.getAll = async (req, res) => {
 
     try {
 
-        const userId = 1;
+        const userId = Number(req.query.id_usuario);
+
+        if (!userId) {
+            return res.status(400).json({
+                error: 'Usuário não informado'
+            });
+        }
 
         const result = await db.query(`
             SELECT

@@ -52,14 +52,27 @@
   cursor: pointer;
 }
 
-.inputGametarg {
+.inputGamertag {
   padding: 15px;
   border-radius: 8px;
   border: none;
   margin-top: -10px;
 }
 
-.gametarg {
+.gamertag {
   font-size: 10px;
   margin-right: 60px;
+}
+
+.errorMessage {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #c62828;
+  border-radius: 6px;
+  background-color: #ffebee;
+  color: #b71c1c;
+  font-size: 14px;
+  text-align: center;
+  box-sizing: border-box;
 }

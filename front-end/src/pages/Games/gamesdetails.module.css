@@ -9,6 +9,23 @@
   margin: 0 auto;
 }
 
+.backButton {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  background: #20222c;
+  color: var(--text-h);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.backButton:hover {
+  transform: translateX(-3px);
+}
+
 .coverImage {
   width: 100%;
   height: 400px;
@@ -41,6 +58,24 @@
   font-size: 18px;
   line-height: 1.7;
   margin-top: 20px;
+}
+
+.gameInfo {
+  margin-top: 20px;
+  padding: 18px 20px;
+  background: #20222c;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.gameInfo p {
+  color: var(--text);
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.gameInfo strong {
+  color: var(--text-h);
 }
 
 .playButton {
@@ -77,6 +112,34 @@
   font-size: 32px;
   font-weight: 900;
   margin-bottom: 24px;
+}
+
+.performanceInfo {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.performanceInfo div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.performanceInfo strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.performanceInfo span {
+  color: var(--accent);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .table {
@@ -118,7 +181,6 @@
 }
 
 @media (max-width: 768px) {
-
   .gameTitle {
     font-size: 32px;
   }
@@ -130,5 +192,13 @@
   .table {
     display: block;
     overflow-x: auto;
+  }
+
+  .performanceInfo {
+    flex-direction: column;
+  }
+
+  .playButton {
+    margin-left: 0;
   }
 }

@@ -11,9 +11,27 @@ exports.create = async (req, res) => {
                 req.body.pontos_obtidos
             );
 
-        res.json(history);
+        res.status(201).json(history);
 
     } catch (error) {
+
+        if (
+            error.message ===
+            'Professor não pode participar de partidas'
+        ) {
+            return res.status(403).json({
+                error: error.message
+            });
+        }
+
+        if (
+            error.message ===
+            'Usuário não encontrado'
+        ) {
+            return res.status(404).json({
+                error: error.message
+            });
+        }
 
         res.status(500).json({
             error: error.message

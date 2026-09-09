@@ -7,6 +7,7 @@ router.post('/login', userController.login);
 router.get('/buscar/:query', userController.searchUsers);
 router.get('/:id/avatar', userController.getUserWithAvatar);
 
+router.put('/:id', userController.updateUser);
 router.put('/:id/password', userController.changePassword);
 
 module.exports = router;

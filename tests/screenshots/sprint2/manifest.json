@@ -1,0 +1,128 @@
+{
+  "sprint": "Sprint 2",
+  "projeto": "Lúdica",
+  "gerado_em": "2026-09-09T22:32:15.064Z",
+  "frontend": "http://localhost:5173",
+  "backend": "http://localhost:3000",
+  "usuarios": {
+    "aluno": {
+      "id": 48,
+      "nome": "Aluno Teste Sprint 2",
+      "gamertag": "aluno_sprint2_1788993115077",
+      "email": "aluno.sprint2.1788993115077@teste.com",
+      "data_nascimento": "2000-05-10",
+      "tipo_usuario": "Usuario",
+      "perfil": "Aluno",
+      "senha": "Teste123!"
+    },
+    "professor": {
+      "id": 49,
+      "nome": "Professor Teste Sprint 2",
+      "gamertag": "professor_sprint2_1788993115077",
+      "email": "professor.sprint2.1788993115077@teste.com",
+      "data_nascimento": "1985-03-15",
+      "tipo_usuario": "Usuario",
+      "perfil": "Professor",
+      "senha": "Teste123!"
+    }
+  },
+  "requisitos_sprint2": [
+    "Unicidade da Gamertag",
+    "Uso do usuário autenticado no histórico e ranking",
+    "Persistência das alterações dos dados do Perfil",
+    "Recuperação automática do avatar no login",
+    "Melhorias na tela de detalhamento do jogo",
+    "Diferenciação entre os perfis Aluno e Professor",
+    "Permissões de participação em partidas",
+    "Regras de participação no ranking",
+    "Biblioteca diferenciada conforme o perfil",
+    "Preparação da área de atividades do Professor"
+  ],
+  "dados_teste_aluno": {
+    "jogo": 1,
+    "pontuacoes": [
+      200,
+      500,
+      350
+    ],
+    "quantidade_partidas": 3,
+    "melhor_pontuacao": 500
+  },
+  "validacoes_erro": {
+    "gamertag_duplicada": {
+      "status_http_esperado": 400,
+      "mensagem_interface_esperada": "Gamertag já está em uso",
+      "screenshot_antes": "aluno-14-gamertag-duplicada-preenchido.png",
+      "screenshot_depois": "aluno-15-gamertag-duplicada-bloqueada.png",
+      "observacao": "A evidência principal é capturada somente após a mensagem de erro estar visível na interface."
+    },
+    "professor_registro_partida": {
+      "status_http_esperado": 403,
+      "mensagem_esperada": "Professor não pode participar de partidas",
+      "tipo_validacao": "API",
+      "screenshot": false,
+      "observacao": "Não há screenshot porque o erro é validado diretamente na API e não é apresentado pela interface."
+    }
+  },
+  "validacoes_professor": {
+    "pode_registrar_partida": false,
+    "status_esperado_registro_partida": 403,
+    "participa_ranking": false,
+    "visualiza_historico": false,
+    "visualiza_desempenho": false,
+    "ambiente_atividades": true,
+    "criar_atividade_implementado": false
+  },
+  "trabalhos_futuros_indicados_professor": [
+    "Visualização dos perfis dos amigos, podendo visualizar avatares e pontuações nos jogos",
+    "Implementação do comportamento específico do perfil Administrador",
+    "Integração dos jogos como aplicações separadas por API",
+    "Loja de itens para Avatar utilizando pontos",
+    "Sistema de conquistas"
+  ],
+  "melhorias_identificadas_sprint2": [
+    "Melhorar a identificação persistente do usuário autenticado no cabeçalho global, exibindo avatar, Gamertag e perfil"
+  ],
+  "observacoes": [
+    "Os usuários criados são exclusivamente contas locais de teste.",
+    "As credenciais foram mantidas para permitir a reprodução manual das evidências.",
+    "Em testes de erro da interface, a screenshot de evidência é realizada somente depois que a mensagem de erro está visível.",
+    "Erros validados exclusivamente pela API não geram screenshots artificiais da interface.",
+    "As funcionalidades futuras indicadas pelo professor não fazem parte da validação funcional desta Sprint."
+  ],
+  "screenshots": [
+    "00-tela-inicial.png",
+    "01-biblioteca-aluno.png",
+    "02-detalhamento-aluno.png",
+    "03-desempenho-historico-ranking-aluno.png",
+    "04-biblioteca-professor.png",
+    "05-detalhamento-professor.png",
+    "ERRO-validacao.png",
+    "aluno-01-cadastro-vazio.png",
+    "aluno-02-cadastro-preenchido.png",
+    "aluno-03-cadastro-concluido.png",
+    "aluno-04-login-vazio.png",
+    "aluno-05-login-preenchido.png",
+    "aluno-06-home.png",
+    "aluno-07-biblioteca.png",
+    "aluno-08-detalhe-topo.png",
+    "aluno-09-detalhe-completo.png",
+    "aluno-10-desempenho.png",
+    "aluno-11-historico.png",
+    "aluno-12-ranking.png",
+    "aluno-13-perfil.png",
+    "aluno-14-gamertag-duplicada-preenchido.png",
+    "aluno-15-gamertag-duplicada-bloqueada.png",
+    "professor-01-cadastro-vazio.png",
+    "professor-02-cadastro-preenchido.png",
+    "professor-03-cadastro-concluido.png",
+    "professor-04-login-vazio.png",
+    "professor-05-login-preenchido.png",
+    "professor-06-home.png",
+    "professor-07-biblioteca.png",
+    "professor-08-detalhe-topo.png",
+    "professor-09-detalhe-completo.png",
+    "professor-10-atividades.png",
+    "professor-11-perfil.png"
+  ]
+}

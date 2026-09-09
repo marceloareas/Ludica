@@ -2,7 +2,7 @@
 -- Alterado o nome da tabela de "usuarios" para "usuario".
 CREATE TABLE usuario (
     id_usuario SERIAL PRIMARY KEY,
-    nome_usuario VARCHAR(100),
+    nome_usuario VARCHAR(100) UNIQUE,
     email VARCHAR(100) UNIQUE,
     data_nascimento DATE,
     senha VARCHAR(255),
@@ -10,6 +10,7 @@ CREATE TABLE usuario (
     tipo_usuario VARCHAR(20), -- Administrador ou Jogador
     flag_usuario CHAR(1),
     data_cadastro TIMESTAMP DEFAULT NOW()
+    tipo_jogador VARCHAR(20) DEFAULT 'Aluno'
 );
 
 -- 2. Customização do Aluno (Relacionamento 1:1)
@@ -28,6 +29,9 @@ CREATE TABLE jogo (
     codigo_jogo CHAR(5),
     titulo VARCHAR(100),
     descricao TEXT,
+    tempo_estimado INT,
+    faixa_etaria VARCHAR(20),
+    quantidade_jogadores INT,
     url_recurso VARCHAR(255),
     url_imagem TEXT,
     id_admin_criador INT,

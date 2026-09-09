@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import styles from './register.module.css'
 
@@ -11,40 +11,62 @@ function Input() {
   const [senha, setSenha] = useState('')
   const [dataNascimento, setDataNascimento] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
+  const [perfilUsuario, setPerfilUsuario] = useState('Aluno')
+
+  // Mensagem de erro exibida diretamente na página.
+  const [erro, setErro] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
 
+    // Remove mensagens de uma tentativa anterior.
+    setErro('')
+
     if (senha !== confirmarSenha) {
-      alert('As senhas precisam ser iguais')
+      setErro('As senhas precisam ser iguais')
       return
     }
 
     try {
       const response = await fetch('http://localhost:3000/users/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           name: nomeCompleto,
           userName: nomeUsuario,
           email,
           password: senha,
-          birthDate: dataNascimento
+          birthDate: dataNascimento,
+          perfil_usuario: perfilUsuario
         })
       })
 
-      console.log(response)
+      /*
+       * Lê a resposta do back-end.
+       * Em caso de Gamertag duplicada, por exemplo:
+       *
+       * {
+       *   "error": "Gamertag já está em uso"
+       * }
+       */
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error('Erro ao criar conta')
+        setErro(data.error || 'Erro ao criar conta')
+        return
       }
 
       alert('Conta criada!')
       navigate("/")
-    
+
     } catch (err) {
       console.error(err)
-      alert('Erro ao criar conta')
+
+      setErro(
+        'Não foi possível conectar ao servidor. Tente novamente.'
+      )
     }
   }
 
@@ -62,7 +84,11 @@ function Input() {
           type="email"
           placeholder="E-mail"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value)
+            setErro('')
+          }}
+          required
         />
 
         <input
@@ -70,24 +96,52 @@ function Input() {
           type="text"
           placeholder="Nome completo"
           value={nomeCompleto}
-          onChange={(e) => setNomeCompleto(e.target.value)}
+          onChange={(e) => {
+            setNomeCompleto(e.target.value)
+            setErro('')
+          }}
+          required
         />
 
-        <p className={styles.gametarg}>Nome que será exibido para os outros usuários</p>
+        <p className={styles.gamertag}>
+          Nome que será exibido para os outros usuários
+        </p>
+
         <input
-          className={styles.inputGametarg}
+          className={styles.inputGamertag}
           type="text"
-          placeholder="Gametarg"
+          placeholder="Gamertag"
           value={nomeUsuario}
-          onChange={(e) => setNomeUsuario(e.target.value)}
+          onChange={(e) => {
+            setNomeUsuario(e.target.value)
+            setErro('')
+          }}
+          required
         />
+
+        <select
+          className={styles.input}
+          value={perfilUsuario}
+          onChange={(e) => {
+            setPerfilUsuario(e.target.value)
+            setErro('')
+          }}
+          required
+        >
+          <option value="Aluno">Aluno</option>
+          <option value="Professor">Professor</option>
+        </select>
 
         <input
           className={styles.input}
           type="password"
           placeholder="Senha"
           value={senha}
-          onChange={(e) => setSenha(e.target.value)}
+          onChange={(e) => {
+            setSenha(e.target.value)
+            setErro('')
+          }}
+          required
         />
 
         <input
@@ -95,17 +149,37 @@ function Input() {
           type="password"
           placeholder="Confirme sua senha"
           value={confirmarSenha}
-          onChange={(e) => setConfirmarSenha(e.target.value)}
+          onChange={(e) => {
+            setConfirmarSenha(e.target.value)
+            setErro('')
+          }}
+          required
         />
 
         <input
           className={styles.input}
           type="date"
           value={dataNascimento}
-          onChange={(e) => setDataNascimento(e.target.value)}
+          onChange={(e) => {
+            setDataNascimento(e.target.value)
+            setErro('')
+          }}
+          required
         />
 
-        <button type="submit" className={styles.enterLogin}>
+        {erro && (
+          <div
+            role="alert"
+            className={styles.errorMessage}
+          >
+            {erro}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className={styles.enterLogin}
+        >
           Criar conta
         </button>
 

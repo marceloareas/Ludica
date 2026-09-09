@@ -36,14 +36,25 @@ exports.getAllGames = async () => {
 };
 
 exports.getGameById = async (id) => {
+  const result = await db.query(
+    `SELECT
+       id_jogo,
+       codigo_jogo,
+       titulo,
+       descricao,
+       tempo_estimado,
+       faixa_etaria,
+       quantidade_jogadores,
+       url_recurso,
+       url_imagem,
+       id_admin_criador,
+       data_criacao
+     FROM jogo
+     WHERE id_jogo = $1`,
+    [id]
+  );
 
-    const result = await db.query(
-        `SELECT * FROM jogo
-         WHERE id_jogo = $1`,
-        [id]
-    );
-
-    return result.rows[0];
+  return result.rows[0];
 };
 
 exports.deleteGame = async (id) => {

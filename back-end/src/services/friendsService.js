@@ -1,5 +1,6 @@
 const db = require('../db/db.js');
 
+
 exports.enviarSolicitacao = async (
     id_usuario_1,
     id_usuario_2
@@ -24,7 +25,9 @@ exports.enviarSolicitacao = async (
     );
 
     if (amizadeExistente.rowCount > 0) {
-        throw new Error('Já existe uma solicitação ou amizade entre esses usuários.');
+        throw new Error(
+            'Já existe uma solicitação ou amizade entre esses usuários.'
+        );
     }
 
     const result = await db.query(
@@ -42,6 +45,7 @@ exports.enviarSolicitacao = async (
     return result.rows[0];
 };
 
+
 exports.aceitarSolicitacao = async (
     id_usuario_1,
     id_usuario_2
@@ -51,8 +55,8 @@ exports.aceitarSolicitacao = async (
         `UPDATE amizade
          SET status = 'Aceito'
          WHERE id_usuario_1 = $1
-         AND id_usuario_2 = $2
-         AND status = 'Pendente'
+           AND id_usuario_2 = $2
+           AND status = 'Pendente'
          RETURNING *`,
         [id_usuario_1, id_usuario_2]
     );
@@ -63,6 +67,7 @@ exports.aceitarSolicitacao = async (
 
     return result.rows[0];
 };
+
 
 exports.listarAmigos = async (id_usuario) => {
 
@@ -92,6 +97,7 @@ exports.listarAmigos = async (id_usuario) => {
     return result.rows;
 };
 
+
 exports.listarSolicitacoesPendentes = async (id_usuario) => {
 
     const result = await db.query(
@@ -103,14 +109,16 @@ exports.listarSolicitacoesPendentes = async (id_usuario) => {
          JOIN usuario u
             ON u.id_usuario = a.id_usuario_1
          WHERE a.id_usuario_2 = $1
-         AND a.status = 'Pendente'`,
+           AND a.status = 'Pendente'`,
         [id_usuario]
     );
 
     return result.rows;
 };
 
+
 exports.listarSolicitacoesEnviadas = async (id_usuario) => {
+
     const result = await db.query(
         `SELECT
             a.id_usuario_2,
@@ -120,38 +128,48 @@ exports.listarSolicitacoesEnviadas = async (id_usuario) => {
          JOIN usuario u
             ON u.id_usuario = a.id_usuario_2
          WHERE a.id_usuario_1 = $1
-         AND a.status = 'Pendente'`,
+           AND a.status = 'Pendente'`,
         [id_usuario]
     );
 
     return result.rows;
 };
 
-exports.removerAmizade = async (id1, id2) => {
-  const result = await db.query(
-    `
-    DELETE FROM amizade
-    WHERE (
-      id_usuario_1 = $1 AND id_usuario_2 = $2
-    )
-    OR (
-      id_usuario_1 = $2 AND id_usuario_2 = $1
-    )
-    RETURNING *;
-    `,
-    [id1, id2]
-  );
 
-  return result.rows[0];
+exports.removerAmizade = async (id1, id2) => {
+
+    const result = await db.query(
+        `
+        DELETE FROM amizade
+        WHERE (
+            id_usuario_1 = $1
+            AND id_usuario_2 = $2
+        )
+        OR (
+            id_usuario_1 = $2
+            AND id_usuario_2 = $1
+        )
+        RETURNING *;
+        `,
+        [id1, id2]
+    );
+
+    return result.rows[0];
 };
 
-exports.recusarSolicitacao = async (id_remetente, id_destinatario) => {
+
+exports.recusarSolicitacao = async (
+    id_remetente,
+    id_destinatario
+) => {
+
     const result = await db.query(
         `
         UPDATE amizade
         SET status = 'Recusado'
         WHERE (
-            id_usuario_1 = $1 AND id_usuario_2 = $2
+            id_usuario_1 = $1
+            AND id_usuario_2 = $2
         )
         AND status = 'Pendente'
         RETURNING *;
@@ -166,36 +184,77 @@ exports.recusarSolicitacao = async (id_remetente, id_destinatario) => {
     return result.rows[0];
 };
 
-exports.obterRankingPorJogo = async (id_usuario, id_jogo) => {
-  const result = await db.query(
-    `
-    SELECT 
-        u.id_usuario,
-        u.nome_usuario,
-        COALESCE(SUM(h.pontos_obtidos), 0) AS pontos_acumulados,
-        CASE 
-            WHEN u.id_usuario = $1 THEN true 
-            ELSE false 
-        END AS is_me
-    FROM usuario u
-    LEFT JOIN historico_partida h 
-        ON h.id_usuario = u.id_usuario 
-        AND h.id_jogo = $2
-    WHERE u.id_usuario = $1
-       OR u.id_usuario IN (
-           SELECT id_usuario_2 
-           FROM amizade 
-           WHERE id_usuario_1 = $1 AND status = 'Aceito'
-           UNION
-           SELECT id_usuario_1 
-           FROM amizade 
-           WHERE id_usuario_2 = $1 AND status = 'Aceito'
-       )
-    GROUP BY u.id_usuario
-    ORDER BY pontos_acumulados DESC;
-    `,
-    [id_usuario, id_jogo]
-  );
 
-  return result.rows;
+exports.obterRankingPorJogo = async (
+    id_usuario,
+    id_jogo
+) => {
+
+    const result = await db.query(
+        `
+        SELECT
+            u.id_usuario,
+            u.nome_usuario,
+
+            COALESCE(
+                SUM(h.pontos_obtidos),
+                0
+            ) AS pontos_acumulados,
+
+            COALESCE(
+                MAX(h.pontos_obtidos),
+                0
+            ) AS melhor_pontuacao,
+
+            COUNT(
+                h.id_historico
+            )::int AS quantidade_partidas,
+
+            CASE
+                WHEN u.id_usuario = $1
+                THEN true
+                ELSE false
+            END AS is_me
+
+        FROM usuario u
+
+        LEFT JOIN historico_partida h
+            ON h.id_usuario = u.id_usuario
+            AND h.id_jogo = $2
+
+        WHERE
+            u.tipo_usuario = 'Usuario'
+            AND u.perfil_usuario = 'Aluno'
+            AND (
+                u.id_usuario = $1
+
+                OR u.id_usuario IN (
+                    SELECT id_usuario_2
+                    FROM amizade
+                    WHERE id_usuario_1 = $1
+                      AND status = 'Aceito'
+
+                    UNION
+
+                    SELECT id_usuario_1
+                    FROM amizade
+                    WHERE id_usuario_2 = $1
+                      AND status = 'Aceito'
+                )
+            )
+
+        GROUP BY
+            u.id_usuario
+
+        ORDER BY
+            melhor_pontuacao DESC;
+        `,
+        [
+            id_usuario,
+            id_jogo
+        ]
+    );
+
+    return result.rows;
 };
+

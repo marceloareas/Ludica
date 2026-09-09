@@ -26,17 +26,62 @@ export default function Perfil() {
 
   const avatarConfig = JSON.parse(localStorage.getItem('avatar') || '{}');
 
-  const handleSaveProfile = (e) => {
-    e.preventDefault();
+  const handleSaveProfile = async (e) => {
+  e.preventDefault();
 
-    localStorage.setItem('nome_completo', formData.nomeCompleto);
-    localStorage.setItem('email', formData.email);
-    localStorage.setItem('userName', formData.namertag);
-    localStorage.setItem('data_nascimento', formData.dataNascimento);
+  try {
+    const userId = localStorage.getItem('id_user');
+
+    if (!userId) {
+      alert('Usuário não autenticado');
+      return;
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/users/${userId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome_completo: formData.nomeCompleto,
+          email: formData.email,
+          userName: formData.namertag,
+          data_nascimento: formData.dataNascimento,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro ao atualizar perfil');
+    }
+
+    localStorage.setItem('nome_completo', data.nome_completo);
+    localStorage.setItem('email', data.email);
+    localStorage.setItem('userName', data.nome_usuario);
+    localStorage.setItem(
+      'data_nascimento',
+      data.data_nascimento
+    );
+
+    setFormData({
+      nomeCompleto: data.nome_completo || '',
+      email: data.email || '',
+      namertag: data.nome_usuario || '',
+      dataNascimento: data.data_nascimento?.split('T')[0] || '',
+    });
 
     setEditMode(false);
     alert('Dados atualizados com sucesso!');
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
 
   const handleChangePassword = async () => {
     try {

@@ -6,15 +6,47 @@ exports.registrarPartida = async (
     pontos_obtidos
 ) => {
 
+    const userResult = await db.query(
+        `
+        SELECT
+            tipo_usuario,
+            perfil_usuario
+        FROM usuario
+        WHERE id_usuario = $1
+        `,
+        [id_usuario]
+    );
+
+    const user = userResult.rows[0];
+
+    if (!user) {
+        throw new Error('Usuário não encontrado');
+    }
+
+    const podeJogar =
+        user.tipo_usuario === 'Administrador' ||
+        (
+            user.tipo_usuario === 'Usuario' &&
+            user.perfil_usuario === 'Aluno'
+        );
+
+    if (!podeJogar) {
+        throw new Error(
+            'Professor não pode participar de partidas'
+        );
+    }
+
     const result = await db.query(
-        `INSERT INTO historico_partida
+        `
+        INSERT INTO historico_partida
         (
             id_usuario,
             id_jogo,
             pontos_obtidos
         )
         VALUES ($1,$2,$3)
-        RETURNING *`,
+        RETURNING *
+        `,
         [
             id_usuario,
             id_jogo,
@@ -27,7 +59,8 @@ exports.registrarPartida = async (
 
 exports.getHistoryByGame = async (id_jogo) => {
 
-    const result = await db.query(`
+    const result = await db.query(
+        `
         SELECT 
             hp.pontos_obtidos,
             hp.data_partida,
@@ -37,7 +70,9 @@ exports.getHistoryByGame = async (id_jogo) => {
             ON u.id_usuario = hp.id_usuario
         WHERE hp.id_jogo = $1
         ORDER BY hp.data_partida DESC
-    `, [id_jogo]);
+        `,
+        [id_jogo]
+    );
 
     return result.rows;
 };

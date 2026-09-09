@@ -30,7 +30,7 @@ exports.getAvatar = async (req, res) => {
         const avatar = await avatarService
             .getAvatar(req.params.id);
 
-        res.json(avatar);
+        res.json(avatar || null);
 
     } catch (error) {
 

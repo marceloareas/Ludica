@@ -11,6 +11,7 @@ function Input() {
   const [senha, setSenha] = useState('')
   const [dataNascimento, setDataNascimento] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
+  const [tipoUsuario, setTipoUsuario] = useState('Aluno')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -29,22 +30,22 @@ function Input() {
           userName: nomeUsuario,
           email,
           password: senha,
-          birthDate: dataNascimento
+          birthDate: dataNascimento,
+          tipoUsuario
         })
       })
 
-      console.log(response)
-
       if (!response.ok) {
-        throw new Error('Erro ao criar conta')
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData.error || 'Erro ao criar conta')
       }
 
       alert('Conta criada!')
       navigate("/")
-    
+
     } catch (err) {
       console.error(err)
-      alert('Erro ao criar conta')
+      alert(err.message)
     }
   }
 
@@ -104,6 +105,16 @@ function Input() {
           value={dataNascimento}
           onChange={(e) => setDataNascimento(e.target.value)}
         />
+
+        <p className={styles.gametarg}>Você é:</p>
+        <select
+          className={styles.input}
+          value={tipoUsuario}
+          onChange={(e) => setTipoUsuario(e.target.value)}
+        >
+          <option value="Aluno">Aluno</option>
+          <option value="Professor">Professor</option>
+        </select>
 
         <button type="submit" className={styles.enterLogin}>
           Criar conta

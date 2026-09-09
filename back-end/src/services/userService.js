@@ -16,25 +16,36 @@ exports.register = async (data) => {
         name,
         userName,
         password,
-        birthDate
+        birthDate,
+        tipoUsuario
     } = data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await db.query(
-        `INSERT INTO usuario 
-        (email, nome_completo, nome_usuario, senha, data_nascimento, tipo_usuario, flag_usuario)
-        VALUES ($1,$2,$3,$4,$5,'Jogador','A')
-        RETURNING *`,
-        [email, name, userName, hashedPassword, birthDate]
-    );
+    try {
+        const result = await db.query(
+            `INSERT INTO usuario 
+            (email, nome_completo, nome_usuario, senha, data_nascimento, tipo_usuario, flag_usuario)
+            VALUES ($1,$2,$3,$4,$5,$6,'A')
+            RETURNING *`,
+            [email, name, userName, hashedPassword, birthDate, tipoUsuario || 'Aluno']
+        );
 
-    return result.rows[0];
+        return result.rows[0];
+    } catch (err) {
+        if (err.code === '23505') {
+            throw new Error('Esse nome de usuário já está em uso');
+        }
+        throw err;
+    }
 };
 
 exports.login = async (userName, password) => {
     const result = await db.query(
-        `SELECT * FROM usuario WHERE nome_usuario = $1`,
+        `SELECT u.*, a.aparencia_json
+         FROM usuario u
+         LEFT JOIN avatar a ON u.id_usuario = a.id_usuario
+         WHERE u.nome_usuario = $1`,
         [userName]
     );
 
@@ -64,24 +75,32 @@ exports.login = async (userName, password) => {
             email: user.email,
             nome_completo: user.nome_completo,
             data_nascimento: user.data_nascimento,
+            avatar: user.aparencia_json || null,
         }
     };
 };
 
 exports.update = async (id, data) => {
-    const result = await db.query(
-        `UPDATE usuario
-         SET userName=$1, email=$2, nome_completo=$3
-         WHERE id_usuario=$4
-         RETURNING *`,
-        [data.userName, data.email, data.nome_completo, id]
-    );
+    try {
+        const result = await db.query(
+            `UPDATE usuario
+             SET nome_usuario=$1, email=$2, nome_completo=$3, data_nascimento=$4
+             WHERE id_usuario=$5
+             RETURNING *`,
+            [data.userName, data.email, data.nome_completo, data.data_nascimento, id]
+        );
 
-    if (result.rows.length === 0) {
-        throw new Error('Usuário não encontrado');
+        if (result.rows.length === 0) {
+            throw new Error('Usuário não encontrado');
+        }
+
+        return result.rows[0];
+    } catch (err) {
+        if (err.code === '23505') {
+            throw new Error('Esse nome de usuário já está em uso');
+        }
+        throw err;
     }
-
-    return result.rows[0];
 };
 
 exports.remove = async (id) => {

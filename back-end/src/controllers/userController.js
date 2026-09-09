@@ -6,7 +6,8 @@ exports.register = async (req, res) => {
         const user = await userService.register(req.body);
         res.status(201).json(user);
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        const status = err.message.includes('já está em uso') ? 409 : 400;
+        res.status(status).json({ error: err.message });
     }
 };
 
@@ -45,7 +46,8 @@ exports.updateUser = async (req, res) => {
         const user = await userService.update(req.params.id, req.body);
         res.status(200).json(user);
     } catch (err) {
-        res.status(404).json({ error: err.message });
+        const status = err.message.includes('já está em uso') ? 409 : 404;
+        res.status(status).json({ error: err.message });
     }
 };
 

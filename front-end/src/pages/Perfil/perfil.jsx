@@ -26,16 +26,48 @@ export default function Perfil() {
 
   const avatarConfig = JSON.parse(localStorage.getItem('avatar') || '{}');
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
 
-    localStorage.setItem('nome_completo', formData.nomeCompleto);
-    localStorage.setItem('email', formData.email);
-    localStorage.setItem('userName', formData.namertag);
-    localStorage.setItem('data_nascimento', formData.dataNascimento);
+    const userId = localStorage.getItem('id_user');
 
-    setEditMode(false);
-    alert('Dados atualizados com sucesso!');
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userName: formData.namertag,
+          email: formData.email,
+          nome_completo: formData.nomeCompleto,
+          data_nascimento: formData.dataNascimento,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data?.error || 'Erro ao atualizar perfil');
+        return;
+      }
+
+      localStorage.setItem('nome_completo', data.nome_completo);
+      localStorage.setItem('email', data.email);
+      localStorage.setItem('userName', data.nome_usuario);
+      localStorage.setItem('data_nascimento', data.data_nascimento);
+
+      setFormData({
+        nomeCompleto: data.nome_completo,
+        email: data.email,
+        namertag: data.nome_usuario,
+        dataNascimento: data.data_nascimento,
+      });
+
+      setEditMode(false);
+      alert('Dados atualizados com sucesso!');
+    } catch (error) {
+      console.error(error);
+      alert('Erro no servidor');
+    }
   };
 
   const handleChangePassword = async () => {
@@ -176,7 +208,7 @@ export default function Perfil() {
           )}
         </form>
 
-  
+
         {isModalOpen && (
           <div className={perfilStyles.modalOverlay}>
             <div className={perfilStyles.modal}>

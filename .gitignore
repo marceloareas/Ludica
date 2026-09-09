@@ -12,3 +12,7 @@ npm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Arquivos obsoletos/arquivados
+OLD/
+**/OLD/

@@ -66,10 +66,16 @@ exports.register = async (data) => {
 };
 
 
-exports.login = async (userName, password) => {
+exports.login = async (login, password) => {
+    if (!login || !password) {
+        throw new Error('Informe gamertag ou e-mail e senha');
+    }
+
     const result = await db.query(
-        `SELECT * FROM usuario WHERE nome_usuario = $1`,
-        [userName]
+        `SELECT * FROM usuario
+         WHERE nome_usuario = $1
+            OR LOWER(email) = LOWER($1)`,
+        [login.trim()]
     );
 
     const user = result.rows[0];

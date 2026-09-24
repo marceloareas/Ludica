@@ -96,7 +96,7 @@ function Input() {
         <input
           className={styles.input}
           type="text"
-          placeholder="Nome de usuário"
+          placeholder="Gamertag ou e-mail"
           value={nomeUsuario}
           onChange={(e) => setNomeUsuario(e.target.value)}
           required

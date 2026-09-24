@@ -38,19 +38,21 @@ exports.getAllGames = async () => {
 exports.getGameById = async (id) => {
   const result = await db.query(
     `SELECT
-       id_jogo,
-       codigo_jogo,
-       titulo,
-       descricao,
-       tempo_estimado,
-       faixa_etaria,
-       quantidade_jogadores,
-       url_recurso,
-       url_imagem,
-       id_admin_criador,
-       data_criacao
-     FROM jogo
-     WHERE id_jogo = $1`,
+       j.id_jogo,
+       j.codigo_jogo,
+       j.titulo,
+       j.descricao,
+       j.tempo_estimado,
+       j.faixa_etaria,
+       j.quantidade_jogadores,
+       j.url_recurso,
+       j.url_imagem,
+       j.id_admin_criador,
+       u.nome_usuario AS autor,
+       j.data_criacao
+     FROM jogo j
+     LEFT JOIN usuario u ON u.id_usuario = j.id_admin_criador
+     WHERE j.id_jogo = $1`,
     [id]
   );
 

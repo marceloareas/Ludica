@@ -1,65 +1,106 @@
-import { Link, useNavigate } from 'react-router-dom'; // Importe tudo do mesmo pacote
+import { useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { LogOut, Search } from 'lucide-react';
+import { AvatarDisplay } from '../Avatar/AvatarDisplay';
 import styles from './navbar.module.css';
 
+const NAV_ITEMS = [
+  { to: '/home', page: 'home', label: 'Início' },
+  { to: '/games', page: 'games', label: 'Biblioteca' },
+  { to: '/amigos', page: 'amigos', label: 'Amigos' },
+];
+
+const SESSION_KEYS = [
+  'token',
+  'userName',
+  'id_user',
+  'email',
+  'nome_completo',
+  'data_nascimento',
+  'avatar',
+  'tipo_usuario',
+  'perfil_usuario',
+];
+
+function readAvatar() {
+  try {
+    return JSON.parse(localStorage.getItem('avatar'));
+  } catch {
+    return null;
+  }
+}
+
 export default function Navbar({ activePage }) {
-  // O hook DEVE ser chamado aqui dentro
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [busca, setBusca] = useState(searchParams.get('busca') ?? '');
+
+  const userName = localStorage.getItem('userName') ?? '';
+  const avatarConfig = readAvatar();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const termo = busca.trim();
+    navigate(termo ? `/home?busca=${encodeURIComponent(termo)}` : '/home');
+  };
 
   const handleLogout = () => {
-    // É importante limpar o localStorage para o usuário realmente deslogar
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('id_user');
-    localStorage.removeItem('email');
-    localStorage.removeItem('nome_completo');
-    localStorage.removeItem('data_nascimento');
-    localStorage.removeItem('avatar');
-    
-    // Agora redireciona para a tela de Login ou Home
-    navigate('/'); 
+    SESSION_KEYS.forEach((key) => localStorage.removeItem(key));
+    navigate('/');
   };
 
   return (
     <header className={styles.homeHeader}>
+      <Link to="/home" className={styles.logo}>
+        LÚDICA
+      </Link>
+
       <nav className={styles.headerNav}>
-        <Link
-          to="/home"
-          className={`${styles.navItem} ${activePage === 'home' ? styles.active : ''}`}
-        >
-          HOME
-        </Link>
+        {NAV_ITEMS.map(({ to, page, label }) => (
+          <Link
+            key={page}
+            to={to}
+            className={`${styles.navItem} ${activePage === page ? styles.active : ''}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
 
-        <Link
-          to="/amigos"
-          className={`${styles.navItem} ${activePage === 'amigos' ? styles.active : ''}`}
-        >
-          AMIGOS
-        </Link>
+      <form className={styles.searchContainer} onSubmit={handleSearch} role="search">
+        <Search size={18} className={styles.searchIcon} />
+        <input
+          type="search"
+          className={styles.searchInput}
+          placeholder="Buscar jogos, temas ou disciplinas..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+      </form>
 
-        <Link
-          to="/games"
-          className={`${styles.navItem} ${activePage === 'games' ? styles.active : ''}`}
-        >
-          BIBLIOTECA
-        </Link>
-
+      <div className={styles.userArea}>
         <Link
           to="/perfil"
-          className={`${styles.navItem} ${activePage === 'perfil' ? styles.active : ''}`}
+          className={`${styles.userLink} ${activePage === 'perfil' ? styles.active : ''}`}
         >
-          PERFIL
+          <span className={styles.userAvatar}>
+            {avatarConfig ? (
+              <AvatarDisplay config={avatarConfig} size={40} />
+            ) : (
+              userName.charAt(0).toUpperCase()
+            )}
+          </span>
+          @{userName}
         </Link>
-      </nav>
-      
-      <div>
+
         <button
+          type="button"
           className={styles.buttonLogout}
           onClick={handleLogout}
+          title="Sair"
+          aria-label="Sair"
         >
-          <img
-          src={`/images/logout.png`}
-          className={styles.imageLogout}
-          />
+          <LogOut size={20} />
         </button>
       </div>
     </header>

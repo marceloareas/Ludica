@@ -1,21 +1,31 @@
 .homeHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 2rem 2%;
-  background: rgba(0, 0, 0, 0.1);
+  gap: 2rem;
+  padding: 1.25rem 3%;
+  color: inherit;
+  font-family: var(--ludica-font);
+}
+
+.logo {
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .headerNav {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .navItem {
-  color: white;
+  color: inherit;
   text-decoration: none;
-  opacity: 0.7;
-  transition: 0.3s;
+  font-weight: 500;
+  opacity: 0.65;
+  transition: opacity 0.2s, color 0.2s;
 }
 
 .navItem:hover {
@@ -24,39 +34,107 @@
 
 .active {
   opacity: 1;
-  color: var(--accent-orange);
+  color: var(--ludica-orange);
 }
 
 .searchContainer {
-  display: flex;
-  margin-inline: 30px;
-  gap: 8px;
+  position: relative;
+  flex: 1;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9aa1ad;
+  pointer-events: none;
 }
 
 .searchInput {
-  background: var(--yellow-light);
-  padding: 10px;
-  padding-inline: 60px;
-  border-radius: 10px;
-  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 20px 14px 48px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--ludica-navy);
+  font: inherit;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 18px rgba(19, 33, 60, 0.06);
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.searchButton {
-  background: var(--accent-orange);
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  cursor: pointer;
+.searchInput:focus {
+  border-color: var(--ludica-purple);
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.userLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.userAvatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ede7fb;
+  color: #6d3fd1;
+  font-weight: 700;
 }
 
 .buttonLogout {
-  background-color: transparent;
+  display: grid;
+  place-items: center;
+  padding: 8px;
   border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  opacity: 0.6;
   cursor: pointer;
+  transition: opacity 0.2s, background 0.2s;
 }
 
-.imageLogout {
-  width: 35px;
-  margin-left: 0px;
-  padding-top: 5px;
+.buttonLogout:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.12);
+}
+
+@media (max-width: 900px) {
+  .homeHeader {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .userArea {
+    margin-left: auto;
+  }
+
+  .headerNav {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .searchContainer {
+    order: 4;
+    flex-basis: 100%;
+    max-width: none;
+  }
 }

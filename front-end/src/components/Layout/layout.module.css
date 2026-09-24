@@ -11,6 +11,15 @@
   --accent-orange: #e17e0e;
   --accent-orange-hover: #c9700b;
   --yellow-light: #f6dbbb;
+
+  --ludica-bg: #f8f4f1;
+  --ludica-navy: #13213c;
+  --ludica-text: #5d6470;
+  --ludica-orange: #f5a524;
+  --ludica-purple: #b69cf5;
+  --ludica-card: #ffffff;
+  --ludica-border: #ece6e0;
+  --ludica-font: 'Outfit', system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
 .mainLayout {
@@ -19,4 +28,12 @@
   min-height: 100vh;
   background: var(--bg);
   color: var(--white);
+}
+
+/* Tema do modelo novo; as outras páginas migram aos poucos */
+.light {
+  background: var(--ludica-bg);
+  color: var(--ludica-navy);
+  font-family: var(--ludica-font);
+  color-scheme: light;
 }

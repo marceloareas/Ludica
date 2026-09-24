@@ -29,14 +29,16 @@ async function seed() {
         senha,
         nome_completo,
         tipo_usuario,
-        flag_usuario
+        flag_usuario,
+        perfil_usuario
       )
       VALUES
-      ('alice', 'alice@email.com', '2000-01-01', $1, 'Alice Silva', 'Jogador', 'A'),
-      ('bob', 'bob@email.com', '2001-02-10', $1, 'Bob Santos', 'Jogador', 'A'),
-      ('carol', 'carol@email.com', '1999-05-20', $1, 'Carol Lima', 'Jogador', 'A'),
-      ('david', 'david@email.com', '2002-08-15', $1, 'David Souza', 'Jogador', 'A'),
-      ('admin', 'admin@email.com', '1990-01-01', $1, 'Admin Master', 'Administrador', 'A')
+      ('alice', 'alice@email.com', '2000-01-01', $1, 'Alice Silva', 'Usuario', 'A', 'Aluno'),
+      ('bob', 'bob@email.com', '2001-02-10', $1, 'Bob Santos', 'Usuario', 'A', 'Aluno'),
+      ('carol', 'carol@email.com', '1999-05-20', $1, 'Carol Lima', 'Usuario', 'A', 'Aluno'),
+      ('david', 'david@email.com', '2002-08-15', $1, 'David Souza', 'Usuario', 'A', 'Aluno'),
+      ('admin', 'admin@email.com', '1990-01-01', $1, 'Admin Master', 'Administrador', 'A', NULL),
+      ('prof_ana', 'ana@email.com', '1985-03-12', $1, 'Ana Ribeiro', 'Usuario', 'A', 'Professor')
       RETURNING *;
     `, [senha]);
 
@@ -69,17 +71,23 @@ async function seed() {
         codigo_jogo,
         titulo,
         descricao,
+        tempo_estimado,
+        faixa_etaria,
+        quantidade_jogadores,
         url_recurso,
         url_imagem,
-
         id_admin_criador,
         data_criacao
       )
       VALUES
-      ('G001', 'Math Challenge', 'Matemática divertida', 'https://game1.com', '\\images\\1.jpeg', $1, NOW()),
-      ('G002', 'Memory Master', 'Jogo de memória avançado', 'https://game2.com', '\\images\\2.jpeg', $1, NOW()),
-      ('G003', 'Typing Speed', 'Teste de digitação', 'https://game3.com', '\\images\\3.jpeg', $1, NOW()),
-      ('G004', 'Xadrez', 'Xadrez', 'https://game4.com', '\\images\\Xadrez.png', $1, NOW())
+      ('G001', 'Math Challenge', 'Matemática divertida',
+       10, '8+ anos', 1, 'https://game1.com', '/images/1.jpeg', $1, NOW()),
+      ('G002', 'Memory Master', 'Jogo de memória avançado',
+       8, '6+ anos', 1, 'https://game2.com', '/images/2.jpeg', $1, NOW()),
+      ('G003', 'Typing Speed', 'Teste de digitação',
+       5, '10+ anos', 1, 'https://game3.com', '/images/3.jpeg', $1, NOW()),
+      ('G004', 'Xadrez', 'Xadrez',
+       30, '8+ anos', 2, 'https://game4.com', '/images/Xadrez.png', $1, NOW())
       RETURNING *;
     `, [admin.id_usuario]);
 
@@ -174,6 +182,23 @@ async function seed() {
     ]);
 
     console.log('📜 Histórico completo criado');
+
+    // ---------------- AMIZADES ----------------
+    await db.query(`
+      INSERT INTO amizade (id_usuario_1, id_usuario_2, status, data_conexao)
+      VALUES
+      ($1, $2, 'Aceito', NOW()),
+      ($1, $3, 'Aceito', NOW()),
+      ($2, $3, 'Aceito', NOW()),
+      ($4, $1, 'Pendente', NOW());
+    `, [
+      alice.id_usuario,
+      bob.id_usuario,
+      carol.id_usuario,
+      david.id_usuario
+    ]);
+
+    console.log('🤝 Amizades criadas');
     process.exit();
 
   } catch (err) {

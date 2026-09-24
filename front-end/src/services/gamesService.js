@@ -1,4 +1,14 @@
-const API_URL = "http://localhost:3000"; 
+const API_URL = "http://localhost:3000";
+
+export async function getGames(idUsuario) {
+  const response = await fetch(`${API_URL}/games?id_usuario=${idUsuario}`);
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar jogos");
+  }
+
+  return await response.json();
+}
 
 export async function getGameById(id) {
   const response = await fetch(`${API_URL}/games/${id}`);

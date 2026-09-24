@@ -9,8 +9,8 @@ CREATE TABLE usuario (
     nome_completo VARCHAR(100),
     tipo_usuario VARCHAR(20), -- Administrador ou Jogador
     flag_usuario CHAR(1),
-    data_cadastro TIMESTAMP DEFAULT NOW()
-    tipo_jogador VARCHAR(20) DEFAULT 'Aluno'
+    data_cadastro TIMESTAMP DEFAULT NOW(),
+    perfil_usuario VARCHAR(20) DEFAULT 'Aluno'
 );
 
 -- 2. Customização do Aluno (Relacionamento 1:1)

@@ -47,14 +47,14 @@ async function seed() {
     console.log('👤 Usuários criados');
 
     // ---------------- AVATAR ----------------
-    await db.query(`
+        await db.query(`
       INSERT INTO avatar (id_usuario, aparencia_json)
       VALUES
-      ($1, '{"cabelo":"azul","roupa":"armadura","olhos":"verde"}'),
-      ($2, '{"cabelo":"preto","roupa":"casual","olhos":"castanho"}'),
-      ($3, '{"cabelo":"loiro","roupa":"mago","olhos":"azul"}'),
-      ($4, '{"cabelo":"ruivo","roupa":"ninja","olhos":"preto"}'),
-      ($5, '{"cabelo":"branco","roupa":"terno","olhos":"vermelho"}');
+      ($1, '{"skinColor":"#f1c8a4","bgColor":"#bae6fd","hairId":"curto","hairColor":"#06b6d4","eyesId":"redondos","eyesColor":"#166534","mouthId":"sorriso","noseId":"redondo","outfitId":"moletom","outfitColor":"#3b82f6","accessoryId":"headphones"}'),
+      ($2, '{"skinColor":"#a87248","bgColor":"#fef3c7","hairId":"raspado","hairColor":"#222","eyesId":"felizes","eyesColor":"#111","mouthId":"risada","noseId":"grande","outfitId":"t-shirt","outfitColor":"#f97316","accessoryId":"glasses"}'),
+      ($3, '{"skinColor":"#fde4cf","bgColor":"#fbcfe8","hairId":"longo","hairColor":"#fde047","eyesId":"estrelas","eyesColor":"#7c3aed","mouthId":"lingua","noseId":"pequeno","outfitId":"vestido","outfitColor":"#ec4899","accessoryId":"bow"}'),
+      ($4, '{"skinColor":"#d8a679","bgColor":"#bbf7d0","hairId":"afro","hairColor":"#dc2626","eyesId":"piscando","eyesColor":"#7c2d12","mouthId":"neutro","noseId":"reto","outfitId":"camisa","outfitColor":"#facc15","accessoryId":"sunglasses"}'),
+      ($5, '{"skinColor":"#7a4f2b","bgColor":"#e9d5ff","hairId":"ondulado","hairColor":"#e5e5e5","eyesId":"sonolento","eyesColor":"#1e3a8a","mouthId":"o","noseId":"redondo","outfitId":"camisa","outfitColor":"#8b5cf6","accessoryId":"hat"}');
     `, [
       alice.id_usuario,
       bob.id_usuario,

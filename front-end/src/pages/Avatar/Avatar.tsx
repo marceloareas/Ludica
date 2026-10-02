@@ -11,7 +11,7 @@ const DEFAULT_AVATAR: AvatarConfig = {
   eyesId: "felizes",
   eyesColor: "#1e3a8a",
   mouthId: "sorriso",
-  noseId: "round",
+    noseId: "redondo",
   outfitId: "t-shirt",
   outfitColor: "#8b5cf6",
   accessoryId: "none",
@@ -114,55 +114,38 @@ useEffect(() => {
 const set = (patch: Partial<AvatarConfig>) => setC({ ...c, ...patch });
 
 const save = async () => {
+  const user_id = localStorage.getItem("id_user");
+  const token = localStorage.getItem("token");
 
+  if (!user_id || !token) {
+    alert("Faça login para salvar o avatar");
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/avatars/${user_id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ config: c }),
+    });
+
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      alert(`❌ Erro ao salvar: ${errorMsg}`);
+      return;
+    }
+
+    // Só atualiza o cache local depois que o servidor confirmou
     localStorage.setItem("avatar", JSON.stringify(c));
-
-    const user_id = localStorage.getItem('id_user');
-    console.log(user_id)
-
-    console.log("json do avatar")
-    console.log(c)
-
-    if (!user_id) {
-        console.error("Usuário não encontrado");
-        return;
-    }
-
-
-    try {
-
-        const response = await fetch(
-            `http://localhost:3000/avatars/${user_id}`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    id    : user_id,
-                    config: c
-                }),
-            }
-        );
-
-        const data = await response.text();
-
-        console.log(data);
-
-        if (response.ok) {
-            alert("✅ Avatar salvo com sucesso!");
-        } else {
-            const errorMsg = await response.text();
-            alert(`❌ Erro ao salvar: ${errorMsg}`);
-        }
-
-    } catch (error) {
-
-        console.error("Erro ao salvar avatar:", error);
-
-    }
+    setC({ ...c }); // força re-render para a Navbar ler o avatar novo
+    alert("✅ Avatar salvo com sucesso!");
+  } catch (error) {
+    console.error("Erro ao salvar avatar:", error);
+    alert("❌ Não foi possível conectar ao servidor");
+  }
 };
   
 const randomize = () => {

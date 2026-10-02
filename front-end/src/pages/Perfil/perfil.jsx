@@ -6,6 +6,11 @@ import registerStyles from '../Register/register.module.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
+  const authHeaders = () => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${localStorage.getItem('token')}`,
+  });
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -41,9 +46,7 @@ export default function Perfil() {
       `http://localhost:3000/users/${userId}`,
       {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: authHeaders(),
         body: JSON.stringify({
           nome_completo: formData.nomeCompleto,
           email: formData.email,
@@ -54,6 +57,11 @@ export default function Perfil() {
     );
 
     const data = await response.json();
+        if (response.status === 401) {
+      alert('Sessão expirada. Faça login novamente.');
+      navigate('/');
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(data.error || 'Erro ao atualizar perfil');
@@ -101,7 +109,7 @@ export default function Perfil() {
         `http://localhost:3000/users/${userId}/password`,
         {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: authHeaders(),
           body: JSON.stringify({
             senhaAtual: passwordData.senhaAtual,
             novaSenha: passwordData.novaSenha,
@@ -110,6 +118,12 @@ export default function Perfil() {
       );
 
       const data = await response.json();
+
+          if (response.status === 401) {
+      alert('Sessão expirada. Faça login novamente.');
+      navigate('/');
+      return;
+    }
 
       if (!response.ok) {
         alert(data?.error || 'Erro ao alterar senha');

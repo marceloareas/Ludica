@@ -1,8 +1,28 @@
 const db = require('../db/db.js');
 const bcrypt = require('bcrypt');
 
+const PERFIS_VALIDOS = ['Aluno', 'Professor'];
+
+function conflictError(message) {
+    const err = new Error(message);
+    err.status = 409;
+    return err;
+}
+
+// Converte violação de unicidade do Postgres (código 23505) em erro 409
+function translateUniqueViolation(err) {
+    if (err.code !== '23505') {
+        return err;
+    }
+
+    if (err.constraint && err.constraint.includes('email')) {
+        return conflictError('E-mail já está em uso');
+    }
+
+    return conflictError('Gamertag já está em uso');
+}
 const jwt = require('jsonwebtoken');
-const SECRET = 'segredo_super_secreto';
+const { SECRET } = require('../middleware/auth');
 
 
 exports.getAll = async () => {
@@ -15,54 +35,73 @@ exports.register = async (data) => {
     const {
         email,
         name,
-        userName,
         password,
         birthDate,
         perfil_usuario
     } = data;
 
-    // Verifica se a Gamertag já está cadastrada
+    const userName = (data.userName || '').trim();
+
+    if (!userName) {
+        throw new Error('Informe uma Gamertag');
+    }
+
+    const perfilUsuario = perfil_usuario || 'Aluno';
+
+    if (!PERFIS_VALIDOS.includes(perfilUsuario)) {
+        throw new Error('Perfil de usuário inválido. Use Aluno ou Professor');
+    }
+
+    // Verificação amigável (ignora maiúsculas/minúsculas)
     const existingUser = await db.query(
         `SELECT id_usuario
          FROM usuario
-         WHERE nome_usuario = $1`,
+         WHERE LOWER(nome_usuario) = LOWER($1)`,
         [userName]
     );
 
     if (existingUser.rows.length > 0) {
-        throw new Error('Gamertag já está em uso');
+        throw conflictError('Gamertag já está em uso');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Caso o front-end não envie o tipo, assume Aluno
-    const perfilUsuario = perfil_usuario || 'Aluno';
+    try {
+        const result = await db.query(
+            `INSERT INTO usuario
+            (
+                email,
+                nome_completo,
+                nome_usuario,
+                senha,
+                data_nascimento,
+                tipo_usuario,
+                flag_usuario,
+                perfil_usuario
+            )
+            VALUES ($1,$2,$3,$4,$5,'Usuario','A',$6)
+            RETURNING id_usuario,
+                      nome_usuario,
+                      email,
+                      nome_completo,
+                      data_nascimento,
+                      tipo_usuario,
+                      perfil_usuario`,
+            [
+                email,
+                name,
+                userName,
+                hashedPassword,
+                birthDate,
+                perfilUsuario
+            ]
+        );
 
-    const result = await db.query(
-        `INSERT INTO usuario 
-        (
-            email,
-            nome_completo,
-            nome_usuario,
-            senha,
-            data_nascimento,
-            tipo_usuario,
-            flag_usuario,
-            perfil_usuario
-        )
-        VALUES ($1,$2,$3,$4,$5,'Usuario','A',$6)
-        RETURNING *`,
-        [
-            email,
-            name,
-            userName,
-            hashedPassword,
-            birthDate,
-            perfilUsuario
-        ]
-    );
-
-    return result.rows[0];
+        return result.rows[0];
+    } catch (err) {
+        // Cobre a corrida: o banco é a garantia final
+        throw translateUniqueViolation(err);
+    }
 };
 
 
@@ -73,7 +112,7 @@ exports.login = async (login, password) => {
 
     const result = await db.query(
         `SELECT * FROM usuario
-         WHERE nome_usuario = $1
+         WHERE LOWER(nome_usuario) = LOWER($1)
             OR LOWER(email) = LOWER($1)`,
         [login.trim()]
     );
@@ -120,32 +159,58 @@ exports.login = async (login, password) => {
 
 
 exports.update = async (id, data) => {
-    const result = await db.query(
-        `UPDATE usuario
-         SET nome_usuario = $1,
-             email = $2,
-             nome_completo = $3,
-             data_nascimento = $4
-         WHERE id_usuario = $5
-         RETURNING id_usuario,
-                   nome_usuario,
-                   email,
-                   nome_completo,
-                   data_nascimento`,
-        [
-            data.userName,
-            data.email,
-            data.nome_completo,
-            data.data_nascimento,
-            id
-        ]
-    );
+    const userName = (data.userName || '').trim();
+    const nomeCompleto = (data.nome_completo || '').trim();
+    const email = (data.email || '').trim();
 
-    if (result.rows.length === 0) {
-        throw new Error('Usuário não encontrado');
+    if (!userName || !nomeCompleto || !email) {
+        throw new Error('Gamertag, nome completo e e-mail são obrigatórios');
     }
 
-    return result.rows[0];
+    const existingUser = await db.query(
+        `SELECT id_usuario
+         FROM usuario
+         WHERE LOWER(nome_usuario) = LOWER($1)
+           AND id_usuario <> $2`,
+        [userName, id]
+    );
+
+    if (existingUser.rows.length > 0) {
+        throw conflictError('Gamertag já está em uso');
+    }
+
+    try {
+        const result = await db.query(
+            `UPDATE usuario
+             SET nome_usuario = $1,
+                 email = $2,
+                 nome_completo = $3,
+                 data_nascimento = $4
+             WHERE id_usuario = $5
+             RETURNING id_usuario,
+                       nome_usuario,
+                       email,
+                       nome_completo,
+                       to_char(data_nascimento, 'YYYY-MM-DD') AS data_nascimento`,
+            [
+                userName,
+                email,
+                nomeCompleto,
+                data.data_nascimento || null,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+            const err = new Error('Usuário não encontrado');
+            err.status = 404;
+            throw err;
+        }
+
+        return result.rows[0];
+    } catch (err) {
+        throw translateUniqueViolation(err);
+    }
 };
 
 

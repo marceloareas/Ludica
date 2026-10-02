@@ -1,16 +1,19 @@
 -- 1. Tabela Principal de Usuários
 -- Alterado o nome da tabela de "usuarios" para "usuario".
 CREATE TABLE usuario (
+    CREATE UNIQUE INDEX usuario_nome_usuario_lower_idx
+    ON usuario (LOWER(nome_usuario));
     id_usuario SERIAL PRIMARY KEY,
     nome_usuario VARCHAR(100) UNIQUE,
     email VARCHAR(100) UNIQUE,
     data_nascimento DATE,
     senha VARCHAR(255),
     nome_completo VARCHAR(100),
-    tipo_usuario VARCHAR(20), -- Administrador ou Jogador
+    tipo_usuario VARCHAR(20), -- Administrador ou usuario
     flag_usuario CHAR(1),
     data_cadastro TIMESTAMP DEFAULT NOW(),
     perfil_usuario VARCHAR(20) DEFAULT 'Aluno'
+        CONSTRAINT chk_perfil_usuario CHECK (perfil_usuario IN ('Aluno', 'Professor'))
 );
 
 -- 2. Customização do Aluno (Relacionamento 1:1)

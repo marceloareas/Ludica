@@ -1,8 +1,6 @@
 -- 1. Tabela Principal de Usuários
 -- Alterado o nome da tabela de "usuarios" para "usuario".
 CREATE TABLE usuario (
-    CREATE UNIQUE INDEX usuario_nome_usuario_lower_idx
-    ON usuario (LOWER(nome_usuario));
     id_usuario SERIAL PRIMARY KEY,
     nome_usuario VARCHAR(100) UNIQUE,
     email VARCHAR(100) UNIQUE,

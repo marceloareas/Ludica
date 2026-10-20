@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/home', page: 'home', label: 'Início' },
   { to: '/games', page: 'games', label: 'Biblioteca' },
   { to: '/amigos', page: 'amigos', label: 'Amigos' },
+  { to: '/loja', page: 'loja', label: 'Loja' },
 ];
 
 const SESSION_KEYS = [

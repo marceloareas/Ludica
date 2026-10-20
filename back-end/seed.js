@@ -205,6 +205,25 @@ async function seed() {
     console.error('❌ Erro no seed:', err);
     process.exit(1);
   }
+ 
+    // Moedas iniciais para usuários comuns (com registro no extrato)
+    await db.query(`
+      WITH u AS (
+        UPDATE usuario SET moedas = 100 WHERE tipo_usuario = 'Usuario' RETURNING id_usuario
+      )
+      INSERT INTO transacao_moeda (id_usuario, valor, motivo)
+      SELECT id_usuario, 100, 'bonus_inicial' FROM u
+    `);
+
+    // Cada usuário já possui os itens que usa no avatar do seed
+    await db.query(`
+      INSERT INTO usuario_item (id_usuario, id_item)
+      SELECT a.id_usuario, ia.id_item
+      FROM avatar a
+      JOIN item_avatar ia ON (a.aparencia_json::jsonb ->> ia.campo) = ia.valor
+      ON CONFLICT DO NOTHING
+    `);
+
 }
 
 seed();

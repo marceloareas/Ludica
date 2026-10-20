@@ -1,7 +1,34 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import styles from './login.module.css'
+async function carregarAvatar(userId) {
+  try {
+    const response = await fetch(`http://localhost:3000/avatars/${userId}`)
 
+    if (!response.ok) {
+      localStorage.removeItem('avatar')
+      return
+    }
+
+    const avatarData = await response.json()
+    let config = avatarData?.aparencia_json
+
+    if (!config) {
+      localStorage.removeItem('avatar')
+      return
+    }
+
+    if (typeof config === 'string') {
+      config = JSON.parse(config)
+    }
+
+    localStorage.setItem('avatar', JSON.stringify(config))
+  } catch (err) {
+    // Falha no avatar não deve impedir o login
+    console.error('Não foi possível carregar o avatar:', err)
+    localStorage.removeItem('avatar')
+  }
+}
 function Input() {
   const navigate = useNavigate()
 
@@ -51,30 +78,7 @@ function Input() {
         localStorage.removeItem('perfil_usuario')
       }
 
-      const avatarResponse = await fetch(
-        `http://localhost:3000/avatars/${data.user.id}`
-      )
-
-      if (avatarResponse.ok) {
-        const avatarData = await avatarResponse.json()
-
-        if (avatarData?.aparencia_json) {
-          let avatarConfig = avatarData.aparencia_json
-
-          if (typeof avatarConfig === 'string') {
-            avatarConfig = JSON.parse(avatarConfig)
-          }
-
-          localStorage.setItem(
-            'avatar',
-            JSON.stringify(avatarConfig)
-          )
-        } else {
-          localStorage.removeItem('avatar')
-        }
-      } else {
-        localStorage.removeItem('avatar')
-      }
+      await carregarAvatar(data.user.id)
 
       navigate("/home")
 

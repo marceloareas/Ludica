@@ -73,3 +73,65 @@ CREATE TABLE amizade (
     CONSTRAINT fk_amizade_user2 FOREIGN KEY (id_usuario_2) REFERENCES usuario(id_usuario)
 );
 
+
+-- ===== Sprint 3: moedas e loja de itens do avatar =====
+ALTER TABLE usuario
+    ADD COLUMN IF NOT EXISTS moedas INT NOT NULL DEFAULT 0 CHECK (moedas >= 0);
+
+CREATE TABLE IF NOT EXISTS item_avatar (
+    id_item SERIAL PRIMARY KEY,
+    campo VARCHAR(20) NOT NULL CHECK (campo IN (
+        'hairId','hairColor','eyesId','eyesColor','mouthId','noseId',
+        'outfitId','outfitColor','accessoryId','skinColor','bgColor')),
+    valor VARCHAR(30) NOT NULL,
+    nome VARCHAR(60) NOT NULL,
+    preco INT NOT NULL CHECK (preco > 0),
+    UNIQUE (campo, valor)
+);
+
+CREATE TABLE IF NOT EXISTS usuario_item (
+    id_usuario INT NOT NULL REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    id_item INT NOT NULL REFERENCES item_avatar(id_item) ON DELETE CASCADE,
+    data_compra TIMESTAMP NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (id_usuario, id_item)
+);
+
+CREATE TABLE IF NOT EXISTS transacao_moeda (
+    id_transacao SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    valor INT NOT NULL CHECK (valor <> 0),
+    motivo VARCHAR(20) NOT NULL
+        CHECK (motivo IN ('partida','compra','ajuste_admin','bonus_inicial')),
+    id_referencia INT,
+    data_transacao TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- Catálogo: `campo` e `valor` são exatamente as chaves do JSON do avatar
+INSERT INTO item_avatar (campo, valor, nome, preco) VALUES
+    ('hairId','longo','Cabelo longo',30),
+    ('hairId','rabo de cavalo','Rabo de cavalo',30),
+    ('hairId','afro','Cabelo afro',40),
+    ('hairColor','#8b5cf6','Cabelo roxo',25),
+    ('hairColor','#06b6d4','Cabelo ciano',25),
+    ('hairColor','#dc2626','Cabelo vermelho',25),
+    ('eyesId','piscando','Olhos piscando',20),
+    ('eyesId','estrelas','Olhos de estrela',50),
+    ('mouthId','lingua','Língua de fora',20),
+    ('outfitId','moletom','Moletom',40),
+    ('outfitId','camisa','Camisa',40),
+    ('outfitId','vestido','Vestido',60),
+    ('accessoryId','glasses','Óculos',30),
+    ('accessoryId','sunglasses','Óculos escuros',50),
+    ('accessoryId','hat','Chapéu',60),
+    ('accessoryId','headphones','Fones de ouvido',80),
+    ('accessoryId','bow','Laço',30),
+    ('bgColor','#fbcfe8','Fundo rosa',15),
+    ('bgColor','#bbf7d0','Fundo verde',15)
+ON CONFLICT (campo, valor) DO NOTHING;
+
+-- Quem já tem avatar salvo mantém os itens que usa (evita bloqueio retroativo)
+INSERT INTO usuario_item (id_usuario, id_item)
+SELECT a.id_usuario, ia.id_item
+FROM avatar a
+JOIN item_avatar ia ON (a.aparencia_json::jsonb ->> ia.campo) = ia.valor
+ON CONFLICT DO NOTHING;

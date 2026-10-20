@@ -7,6 +7,7 @@ import GameDetails from './pages/Games/GameDetails'
 import Amigos from './pages/Amigos/Amigos'
 import Avatar from './pages/Avatar/Avatar'
 import Perfil from './pages/Perfil/perfil'
+import Loja from './pages/Loja/Loja'
 
 export default function RoutesApp() {
   return (
@@ -20,6 +21,7 @@ export default function RoutesApp() {
         <Route path="/amigos" element={<Amigos />} />
         <Route path="/avatar" element={<Avatar />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/loja" element={<Loja />} />
       </Routes>
     </BrowserRouter>
   )

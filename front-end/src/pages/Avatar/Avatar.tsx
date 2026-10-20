@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from '../../components/Layout/Layout'
 import { AvatarDisplay, AvatarConfig } from '../../components/Avatar/AvatarDisplay';
-
+import { useNavigate } from "react-router-dom";
 
 const DEFAULT_AVATAR: AvatarConfig = {
   skinColor: "#f1c8a4",
@@ -47,11 +47,30 @@ const TABS = [
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
+type ItemLoja = { id_item: number; campo: string; valor: string; nome: string; preco: number; possui: boolean };
+type LockFn = (campo: string, valor: string) => boolean;
 
 export default function Index() {
   const [c, setC] = useState<AvatarConfig>(DEFAULT_AVATAR);
   const [tab, setTab] = useState<TabKey>("hair");
 
+  const navigate = useNavigate();
+  const [itens, setItens] = useState<ItemLoja[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch("http://localhost:3000/loja/itens", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? r.json() : { itens: [] }))
+      .then((d) => setItens(d.itens || []))
+      .catch(() => setItens([]));
+  }, []);
+
+  const isLocked: LockFn = (campo, valor) =>
+    itens.some((i) => i.campo === campo && i.valor === valor && !i.possui);
 useEffect(() => {
   const user_id = localStorage.getItem('id_user');
 
@@ -132,9 +151,9 @@ const save = async () => {
       body: JSON.stringify({ config: c }),
     });
 
-    if (!response.ok) {
-      const errorMsg = await response.text();
-      alert(`❌ Erro ao salvar: ${errorMsg}`);
+        if (!response.ok) {
+      const corpo = await response.json().catch(() => null);
+      alert(`❌ ${corpo?.error || "Erro ao salvar o avatar"}`);
       return;
     }
 
@@ -148,20 +167,23 @@ const save = async () => {
   }
 };
   
-const randomize = () => {
-    const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
+  const randomize = () => {
+    const pick = (a: string[], campo: string) => {
+      const livres = a.filter((v) => !isLocked(campo, v));
+      return livres[Math.floor(Math.random() * livres.length)];
+    };
     setC({
-      skinColor: pick(SKIN_COLORS),
-      bgColor: pick(BG_COLORS),
-      hairId: pick(HAIR),
-      hairColor: pick(HAIR_COLORS),
-      eyesId: pick(EYES),
-      eyesColor: pick(EYE_COLORS),
-      mouthId: pick(MOUTHS),
-      noseId: pick(NOSES),
-      outfitId: pick(OUTFITS),
-      outfitColor: pick(OUTFIT_COLORS),
-      accessoryId: pick(ACCESSORIES),
+      skinColor: pick(SKIN_COLORS, "skinColor"),
+      bgColor: pick(BG_COLORS, "bgColor"),
+      hairId: pick(HAIR, "hairId"),
+      hairColor: pick(HAIR_COLORS, "hairColor"),
+      eyesId: pick(EYES, "eyesId"),
+      eyesColor: pick(EYE_COLORS, "eyesColor"),
+      mouthId: pick(MOUTHS, "mouthId"),
+      noseId: pick(NOSES, "noseId"),
+      outfitId: pick(OUTFITS, "outfitId"),
+      outfitColor: pick(OUTFIT_COLORS, "outfitColor"),
+      accessoryId: pick(ACCESSORIES, "accessoryId"),
     });
   };
 
@@ -180,6 +202,7 @@ const randomize = () => {
             <button onClick={randomize} style={btn("#06b6d4")}>Aleatório</button>
             <button onClick={() => setC(DEFAULT_AVATAR)} style={btn("#64748b")}>Resetar</button>
             <button onClick={save} style={btn("#7c3aed")}>Salvar</button>
+            <button onClick={() => navigate("/loja")} style={btn("#f59e0b")}>Loja</button>
           </div>
           <details style={{ marginTop: 12, fontSize: 12 }}>
             <summary style={{ cursor: "pointer" }}>Ver JSON</summary>
@@ -210,29 +233,29 @@ const randomize = () => {
           </div>
 
           {/* Conteúdo da aba */}
-          {tab === "hair" && (
+                    {tab === "hair" && (
             <>
-              <Options items={HAIR} selected={c.hairId} onPick={(id) => set({ hairId: id })} />
-              <Colors label="Cor do cabelo" colors={HAIR_COLORS} selected={c.hairColor} onPick={(col) => set({ hairColor: col })} />
+              <Options campo="hairId" items={HAIR} selected={c.hairId} onPick={(id) => set({ hairId: id })} isLocked={isLocked} />
+              <Colors campo="hairColor" label="Cor do cabelo" colors={HAIR_COLORS} selected={c.hairColor} onPick={(col) => set({ hairColor: col })} isLocked={isLocked} />
             </>
           )}
           {tab === "eyes" && (
             <>
-              <Options items={EYES} selected={c.eyesId} onPick={(id) => set({ eyesId: id })} />
-              <Colors label="Cor dos olhos" colors={EYE_COLORS} selected={c.eyesColor} onPick={(col) => set({ eyesColor: col })} />
+              <Options campo="eyesId" items={EYES} selected={c.eyesId} onPick={(id) => set({ eyesId: id })} isLocked={isLocked} />
+              <Colors campo="eyesColor" label="Cor dos olhos" colors={EYE_COLORS} selected={c.eyesColor} onPick={(col) => set({ eyesColor: col })} isLocked={isLocked} />
             </>
           )}
-          {tab === "mouth" && <Options items={MOUTHS} selected={c.mouthId} onPick={(id) => set({ mouthId: id })} />}
-          {tab === "nose" && <Options items={NOSES} selected={c.noseId} onPick={(id) => set({ noseId: id })} />}
+          {tab === "mouth" && <Options campo="mouthId" items={MOUTHS} selected={c.mouthId} onPick={(id) => set({ mouthId: id })} isLocked={isLocked} />}
+          {tab === "nose" && <Options campo="noseId" items={NOSES} selected={c.noseId} onPick={(id) => set({ noseId: id })} isLocked={isLocked} />}
           {tab === "outfit" && (
             <>
-              <Options items={OUTFITS} selected={c.outfitId} onPick={(id) => set({ outfitId: id })} />
-              <Colors label="Cor da roupa" colors={OUTFIT_COLORS} selected={c.outfitColor} onPick={(col) => set({ outfitColor: col })} />
+              <Options campo="outfitId" items={OUTFITS} selected={c.outfitId} onPick={(id) => set({ outfitId: id })} isLocked={isLocked} />
+              <Colors campo="outfitColor" label="Cor da roupa" colors={OUTFIT_COLORS} selected={c.outfitColor} onPick={(col) => set({ outfitColor: col })} isLocked={isLocked} />
             </>
           )}
-          {tab === "accessory" && <Options items={ACCESSORIES} selected={c.accessoryId} onPick={(id) => set({ accessoryId: id })} />}
-          {tab === "skin" && <Colors label="Tom de pele" colors={SKIN_COLORS} selected={c.skinColor} onPick={(col) => set({ skinColor: col })} />}
-          {tab === "bg" && <Colors label="Cor de fundo" colors={BG_COLORS} selected={c.bgColor} onPick={(col) => set({ bgColor: col })} />}
+          {tab === "accessory" && <Options campo="accessoryId" items={ACCESSORIES} selected={c.accessoryId} onPick={(id) => set({ accessoryId: id })} isLocked={isLocked} />}
+          {tab === "skin" && <Colors campo="skinColor" label="Tom de pele" colors={SKIN_COLORS} selected={c.skinColor} onPick={(col) => set({ skinColor: col })} isLocked={isLocked} />}
+          {tab === "bg" && <Colors campo="bgColor" label="Cor de fundo" colors={BG_COLORS} selected={c.bgColor} onPick={(col) => set({ bgColor: col })} isLocked={isLocked} />}
         </div>
       </div>
     </main>
@@ -253,50 +276,66 @@ function btn(bg: string): React.CSSProperties {
   };
 }
 
-function Options({ items, selected, onPick }: { items: string[]; selected: string; onPick: (id: string) => void }) {
+function Options({ campo, items, selected, onPick, isLocked }: { campo: string; items: string[]; selected: string; onPick: (id: string) => void; isLocked: LockFn }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
-      {items.map((id) => (
-        <button
-          key={id}
-          onClick={() => onPick(id)}
-          style={{
-            padding: 10,
-            border: `2px solid ${selected === id ? "#7c3aed" : "#e2e8f0"}`,
-            background: selected === id ? "#f5f3ff" : "#fff",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontSize: 13,
-            textTransform: "capitalize",
-          }}
-        >
-          {id}
-        </button>
-      ))}
+      {items.map((id) => {
+        const locked = isLocked(campo, id);
+        return (
+          <button
+            key={id}
+            disabled={locked}
+            title={locked ? "Disponível na loja" : undefined}
+            onClick={() => onPick(id)}
+            style={{
+              padding: 10,
+              border: `2px solid ${selected === id ? "#7c3aed" : "#e2e8f0"}`,
+              background: selected === id ? "#f5f3ff" : "#fff",
+              borderRadius: 8,
+              cursor: locked ? "not-allowed" : "pointer",
+              opacity: locked ? 0.45 : 1,
+              fontSize: 13,
+              textTransform: "capitalize",
+            }}
+          >
+            {locked ? "🔒 " : ""}{id}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-function Colors({ label, colors, selected, onPick }: { label: string; colors: string[]; selected: string; onPick: (c: string) => void }) {
+function Colors({ campo, label, colors, selected, onPick, isLocked }: { campo: string; label: string; colors: string[]; selected: string; onPick: (c: string) => void; isLocked: LockFn }) {
   return (
     <div>
       <p style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>{label}</p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {colors.map((col) => (
-          <button
-            key={col}
-            onClick={() => onPick(col)}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              background: col,
-              border: selected === col ? "3px solid #7c3aed" : "2px solid #fff",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              cursor: "pointer",
-            }}
-          />
-        ))}
+        {colors.map((col) => {
+          const locked = isLocked(campo, col);
+          return (
+            <button
+              key={col}
+              disabled={locked}
+              title={locked ? "Disponível na loja" : undefined}
+              onClick={() => onPick(col)}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: col,
+                border: selected === col ? "3px solid #7c3aed" : "2px solid #fff",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                cursor: locked ? "not-allowed" : "pointer",
+                opacity: locked ? 0.4 : 1,
+                fontSize: 14,
+                lineHeight: 1,
+              }}
+            >
+              {locked ? "🔒" : ""}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

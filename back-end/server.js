@@ -6,7 +6,7 @@ const gamesRoutes = require('./src/routes/gamesRoutes');
 const scoreRoutes = require('./src/routes/scoreRoutes');
 const historyRoutes = require('./src/routes/historyRoutes');
 const friendsRoutes = require('./src/routes/friendsRoutes');
-
+const lojaRoutes = require('./src/routes/lojaRoutes');
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use('/avatars', avatarRoutes);
 app.use('/games', gamesRoutes);
 app.use('/score', scoreRoutes);
 app.use('/history', historyRoutes);
-
+app.use('/loja', lojaRoutes);
 app.use('/friends', friendsRoutes);
 app.listen(3000, () => {
     console.log('Servidor rodando');

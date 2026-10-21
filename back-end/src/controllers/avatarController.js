@@ -1,4 +1,5 @@
 const avatarService = require('../services/avatarService');
+const lojaService = require('../services/lojaService');
 
 exports.saveAvatar = async (req, res) => {
     try {

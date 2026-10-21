@@ -199,13 +199,7 @@ async function seed() {
     ]);
 
     console.log('🤝 Amizades criadas');
-    process.exit();
 
-  } catch (err) {
-    console.error('❌ Erro no seed:', err);
-    process.exit(1);
-  }
- 
     // Moedas iniciais para usuários comuns (com registro no extrato)
     await db.query(`
       WITH u AS (
@@ -223,6 +217,16 @@ async function seed() {
       JOIN item_avatar ia ON (a.aparencia_json::jsonb ->> ia.campo) = ia.valor
       ON CONFLICT DO NOTHING
     `);
+
+    console.log('🪙 Moedas e itens iniciais criados');
+    process.exit();
+
+  } catch (err) {
+    console.error('❌ Erro no seed:', err);
+    process.exit(1);
+  }
+ 
+
 
 }
 
